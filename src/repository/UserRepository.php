@@ -9,6 +9,33 @@ class UserRepository
         $this->pdo = DB::connect();
     }
 
+    public function register($name, $email, $password, $birthDate)
+    {
+       
+        $stmt = $this->pdo->prepare("
+        INSERT INTO users (name, email, password, role_id)
+        VALUES (?, ?, ?, ?)
+    ");
 
+        $stmt->execute([
+            $name,
+            $email,
+            password_hash($password, PASSWORD_BCRYPT),
+            3
+        ]);
 
+        $userId = $this->pdo->lastInsertId();
+
+        $stmt = $this->pdo->prepare("
+        INSERT INTO patients (user_id, birth_date)
+        VALUES (?, ?)
+    ");
+
+        $stmt->execute([
+            $userId,
+            $birthDate
+        ]);
+
+        return $userId;
+    }
 }
