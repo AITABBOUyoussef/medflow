@@ -1,6 +1,18 @@
-<?php 
+<?php
+require_once '../config/database.php'; 
 
+try {
+    $dbClass = new Database();
+    $db = $dbClass->connect(); 
 
+    $query = "SELECT id, nom FROM specialites ORDER BY nom ASC";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    
+    $specialites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -185,34 +197,47 @@
                         </div>
 
                         <!-- Formulaire Nouveau compte -->
-                        <form class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="space-y-1">
-                                    <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
-                                    <div class="relative">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
-                                            <i class="fa-regular fa-user"></i>
-                                        </span>
-                                        <input type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                                    </div>
-                                </div>
-                                <div class="space-y-1">
-                                    <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
-                                    <select class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                                        <option value="">Choisir la spécialité...</option>
-                                        <option value="1">Cardiologue</option>
-                                        <option value="2">Généraliste</option>
-                                        <option value="3">Pédiatre</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="flex justify-end pt-2">
-                                <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
-                                    <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
-                                </button>
-                            </div>
-                        </form>
+                       <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
+    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- Nom du Médecin -->
+        <div class="space-y-1">
+            <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                    <i class="fa-regular fa-user"></i>
+                </span>
+                <input name="doctor_name" type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+            </div>
+        </div>
+        
+        <!-- Spécialité Dynamique -->
+        <div class="space-y-1">
+            <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
+            <select name="specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                <option value="">Choisir la spécialité...</option>
+                
+                <?php if (!empty($specialites)): ?>
+                    <?php foreach ($specialites as $spec): ?>
+                        <option value="<?php echo htmlspecialchars($spec['id']); ?>">
+                            <?php echo htmlspecialchars($spec['nom']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <option value="" disabled>Aucune spécialité trouvée</option>
+                <?php endif; ?>
+                
+            </select>
+        </div>
+    </div>
+    
+    <div class="flex justify-end pt-2">
+        <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
+            <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
+        </button>
+    </div>
+</form>
 
                         <!-- Tableau de l'Équipe -->
                         <div class="overflow-x-auto border border-slate-200/60 rounded-xl shadow-sm">
