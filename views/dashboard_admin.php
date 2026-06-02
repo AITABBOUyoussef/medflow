@@ -1,6 +1,14 @@
 <?php
 require_once '../config/database.php'; 
 
+$totalRDV = 0;
+$totalSpecialites = 0;
+$totalMedecins = 0;
+$moyenneRDV = 0;
+$tauxAnnulation = 0;
+$specialites = [];
+$doctorsList = [];
+
 try {
     $dbClass = new Database();
     $db = $dbClass->connect(); 
@@ -10,58 +18,43 @@ try {
     $stmtSpec->execute();
     $specialites = $stmtSpec->fetchAll(PDO::FETCH_ASSOC);
 
-    
     $queryDocs = "SELECT 
                     users.id, 
                     users.name AS doctor_name, 
                     specialites.nom AS specialite_nom,
                     'Actif' AS statut
-                  JOIN medecins ON users.id = medecins.user_id
-                  JOIN specialites ON specialites.id = medecins.specialite_id
+                  FROM users 
+                  INNER JOIN medecins ON users.id = medecins.user_id
+                  INNER JOIN specialites ON specialites.id = medecins.specialite_id
                   ORDER BY users.id DESC";
                   
     $stmtDocs = $db->prepare($queryDocs);
     $stmtDocs->execute();
     $doctorsList = $stmtDocs->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
-    $totalRDV = 0;
-    $totalSpecialites = 0;
-    $totalMedecins = 0;
-    $moyenneRDV = 0;
-    $tauxAnnulation = 0;
-    $specialites = [];
-    $doctorsList = [];
-try {
-    $queryTotalRDV = "SELECT COUNT(*) AS total FROM rendezvous"; 
+    $queryTotalRDV = "SELECT COUNT(*) AS total FROM `rendez_vous`"; 
     $stmtTotal = $db->query($queryTotalRDV);
     $totalRDV = $stmtTotal->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-    $queryTotalSpec = "SELECT COUNT(*) AS total FROM specialites";
+    $queryTotalSpec = "SELECT COUNT(*) AS total FROM `specialites`";
     $stmtSpecCount = $db->query($queryTotalSpec);
     $totalSpecialites = $stmtSpecCount->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-    $queryTotalDocs = "SELECT COUNT(*) AS total FROM medecins";
+    $queryTotalDocs = "SELECT COUNT(*) AS total FROM `medecins`";
     $stmtDocsCount = $db->query($queryTotalDocs);
     $totalMedecins = $stmtDocsCount->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
     $moyenneRDV = ($totalMedecins > 0) ? round($totalRDV / $totalMedecins, 1) : 0;
 
-    $queryAnnule = "SELECT COUNT(*) AS total FROM rendezvous WHERE status = 'Annulé'"; // Ajuste 'status' ou 'Annulé' selon ta DB
+    $queryAnnule = "SELECT COUNT(*) AS total FROM `rendez_vous` WHERE `status` = 'Annulé' OR `status` = 'ANNULE'"; 
     $stmtAnnule = $db->query($queryAnnule);
     $totalAnnule = $stmtAnnule->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
     $tauxAnnulation = ($totalRDV > 0) ? round(($totalAnnule / $totalRDV) * 100, 1) : 0;
 
 } catch (PDOException $e) {
-    $totalRDV = 0;
-    $totalSpecialites = 0;
-    $moyenneRDV = 0;
-    $tauxAnnulation = 0;
+    die("Erreur de connexion : " . $e->getMessage());
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -179,17 +172,17 @@ try {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Card 1: Taux d'Annulation -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-slate-400">Taux d'Annulation</p>
-                <h3 class="text-2xl font-bold text-rose-600 tracking-tight"><?php echo $tauxAnnulation; ?>%</h3>
-                <span class="inline-flex items-center text-[10px] font-semibold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-md">
-                    Basé sur le flux global
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-inner">
-                <i class="fa-solid fa-chart-line-down"></i>
-            </div>
-        </div>
+    <div class="space-y-1">
+        <p class="text-xs font-medium text-slate-400">Taux d'Annulation</p>
+        <h3 class="text-2xl font-bold text-rose-600 tracking-tight"><?php echo $tauxAnnulation; ?>%</h3>
+        <span class="inline-flex items-center text-[10px] font-semibold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-md">
+            Basé sur le flux global
+        </span>
+    </div>
+    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-inner">
+        <i class="fa-solid fa-calendar-xmark"></i>
+    </div>
+</div>
 
         <!-- Card 2: Moyenne RDV / Praticien -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
