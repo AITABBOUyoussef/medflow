@@ -5,20 +5,17 @@ try {
     $dbClass = new Database();
     $db = $dbClass->connect(); 
 
-    // 1. Récupération des spécialités pour le formulaire <select>
     $querySpec = "SELECT id, nom FROM specialites ORDER BY nom ASC";
     $stmtSpec = $db->prepare($querySpec);
     $stmtSpec->execute();
     $specialites = $stmtSpec->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. 🚀 FIX: Récupération de l'équipe médicale pour le Tableau Dynamique
-    // Hna drna l-jointures s7i7a 3la hssab l-SQL dyalk (users -> medecins -> specialites)
+    
     $queryDocs = "SELECT 
                     users.id, 
                     users.name AS doctor_name, 
                     specialites.nom AS specialite_nom,
-                    'Actif' AS statut -- Hit ma3andeksh champ statut f la base, drnah par défaut 'Actif'
-                  FROM users 
+                    'Actif' AS statut
                   JOIN medecins ON users.id = medecins.user_id
                   JOIN specialites ON specialites.id = medecins.specialite_id
                   ORDER BY users.id DESC";
@@ -30,6 +27,41 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
+    $totalRDV = 0;
+    $totalSpecialites = 0;
+    $totalMedecins = 0;
+    $moyenneRDV = 0;
+    $tauxAnnulation = 0;
+    $specialites = [];
+    $doctorsList = [];
+try {
+    $queryTotalRDV = "SELECT COUNT(*) AS total FROM rendezvous"; 
+    $stmtTotal = $db->query($queryTotalRDV);
+    $totalRDV = $stmtTotal->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+    $queryTotalSpec = "SELECT COUNT(*) AS total FROM specialites";
+    $stmtSpecCount = $db->query($queryTotalSpec);
+    $totalSpecialites = $stmtSpecCount->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+    $queryTotalDocs = "SELECT COUNT(*) AS total FROM medecins";
+    $stmtDocsCount = $db->query($queryTotalDocs);
+    $totalMedecins = $stmtDocsCount->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+    $moyenneRDV = ($totalMedecins > 0) ? round($totalRDV / $totalMedecins, 1) : 0;
+
+    $queryAnnule = "SELECT COUNT(*) AS total FROM rendezvous WHERE status = 'Annulé'"; // Ajuste 'status' ou 'Annulé' selon ta DB
+    $stmtAnnule = $db->query($queryAnnule);
+    $totalAnnule = $stmtAnnule->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+    $tauxAnnulation = ($totalRDV > 0) ? round(($totalAnnule / $totalRDV) * 100, 1) : 0;
+
+} catch (PDOException $e) {
+    $totalRDV = 0;
+    $totalSpecialites = 0;
+    $moyenneRDV = 0;
+    $tauxAnnulation = 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -138,53 +170,66 @@ try {
 
             <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] w-full mx-auto">
                 
-                <section id="stats" class="space-y-3">
-                    <div class="flex items-center gap-2">
-                        <span class="w-1 h-3.5 bg-cyan-500 rounded-full"></span>
-                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tableau de bord de l'activité</h2>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
-                            <div class="space-y-1">
-                                <p class="text-xs font-medium text-slate-400">Taux d'Annulation</p>
-                                <h3 class="text-2xl font-bold text-rose-600 tracking-tight">12.4%</h3>
-                                <span class="inline-flex items-center text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md">
-                                    <i class="fa-solid fa-arrow-trend-down mr-1"></i> -2.1% cette semaine
-                                </span>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-chart-line-down"></i></div>
-                        </div>
+               <section id="stats" class="space-y-3">
+    <div class="flex items-center gap-2">
+        <span class="w-1 h-3.5 bg-cyan-500 rounded-full"></span>
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tableau de bord de l'activité</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1: Taux d'Annulation -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
+            <div class="space-y-1">
+                <p class="text-xs font-medium text-slate-400">Taux d'Annulation</p>
+                <h3 class="text-2xl font-bold text-rose-600 tracking-tight"><?php echo $tauxAnnulation; ?>%</h3>
+                <span class="inline-flex items-center text-[10px] font-semibold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-md">
+                    Basé sur le flux global
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-inner">
+                <i class="fa-solid fa-chart-line-down"></i>
+            </div>
+        </div>
 
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
-                            <div class="space-y-1">
-                                <p class="text-xs font-medium text-slate-400">Moy. RDV / Praticien</p>
-                                <h3 class="text-2xl font-bold text-emerald-600 tracking-tight">34 <span class="text-xs font-normal text-slate-400">/sem</span></h3>
-                                <span class="text-[10px] text-slate-400 font-medium">Objectif d'efficacité atteint</span>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
-                        </div>
+        <!-- Card 2: Moyenne RDV / Praticien -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
+            <div class="space-y-1">
+                <p class="text-xs font-medium text-slate-400">Moy. RDV / Praticien</p>
+                <h3 class="text-2xl font-bold text-emerald-600 tracking-tight"><?php echo $moyenneRDV; ?> <span class="text-xs font-normal text-slate-400">/méd</span></h3>
+                <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded-md">
+                    Sur <?php echo $totalMedecins; ?> inscrit(s)
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-lg shadow-inner">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+        </div>
 
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
-                            <div class="space-y-1">
-                                <p class="text-xs font-medium text-slate-400">Total Consultations</p>
-                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight">1,204</h3>
-                                <span class="text-[10px] text-slate-400 font-medium">Cycles complets archivés</span>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-slate-50 text-slate-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-folder-closed"></i></div>
-                        </div>
+        <!-- Card 3: Total Consultations -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
+            <div class="space-y-1">
+                <p class="text-xs font-medium text-slate-400">Total Consultations</p>
+                <h3 class="text-2xl font-bold text-slate-800 tracking-tight"><?php echo number_format($totalRDV); ?></h3>
+                <span class="text-[10px] text-slate-400 font-medium">Flux total enregistré</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-slate-50 text-slate-500 flex items-center justify-center text-lg shadow-inner">
+                <i class="fa-solid fa-folder-closed"></i>
+            </div>
+        </div>
 
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
-                            <div class="space-y-1">
-                                <p class="text-xs font-medium text-slate-400">Spécialités Actives</p>
-                                <h3 class="text-2xl font-bold text-cyan-600 tracking-tight">14 Filtres</h3>
-                                <span class="text-[10px] text-slate-400 font-medium">Disponibles à la recherche</span>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-sliders"></i></div>
-                        </div>
-                    </div>
-                </section>
-
+        <!-- Card 4: Spécialités Actives -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
+            <div class="space-y-1">
+                <p class="text-xs font-medium text-slate-400">Spécialités Actives</p>
+                <h3 class="text-2xl font-bold text-cyan-600 tracking-tight"><?php echo $totalSpecialites; ?> <span class="text-xs font-normal text-slate-400">Filtres</span></h3>
+                <span class="text-[10px] text-slate-400 font-medium">Disponibles sur la plateforme</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg shadow-inner">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+        </div>
+    </div>
+</section>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
                     <section id="medecins" class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-6">
