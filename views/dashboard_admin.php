@@ -5,11 +5,28 @@ try {
     $dbClass = new Database();
     $db = $dbClass->connect(); 
 
-    $query = "SELECT id, nom FROM specialites ORDER BY nom ASC";
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    
-    $specialites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // 1. Récupération des spécialités pour le formulaire <select>
+    $querySpec = "SELECT id, nom FROM specialites ORDER BY nom ASC";
+    $stmtSpec = $db->prepare($querySpec);
+    $stmtSpec->execute();
+    $specialites = $stmtSpec->fetchAll(PDO::FETCH_ASSOC);
+
+    // 2. 🚀 FIX: Récupération de l'équipe médicale pour le Tableau Dynamique
+    // Hna drna l-jointures s7i7a 3la hssab l-SQL dyalk (users -> medecins -> specialites)
+    $queryDocs = "SELECT 
+                    users.id, 
+                    users.name AS doctor_name, 
+                    specialites.nom AS specialite_nom,
+                    'Actif' AS statut -- Hit ma3andeksh champ statut f la base, drnah par défaut 'Actif'
+                  FROM users 
+                  JOIN medecins ON users.id = medecins.user_id
+                  JOIN specialites ON specialites.id = medecins.specialite_id
+                  ORDER BY users.id DESC";
+                  
+    $stmtDocs = $db->prepare($queryDocs);
+    $stmtDocs->execute();
+    $doctorsList = $stmtDocs->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
@@ -34,10 +51,8 @@ try {
 
     <div class="flex min-h-screen">
         
-        <!-- ================= SIDEBAR ADMIN ================= -->
         <aside class="fixed inset-y-0 left-0 z-20 hidden w-64 bg-slate-900 border-r border-slate-800 lg:flex lg:flex-col justify-between">
             <div class="flex flex-col flex-1 p-6 overflow-y-auto">
-                <!-- Logo -->
                 <div class="flex items-center gap-3 px-2 mb-8">
                     <span class="text-xl bg-cyan-500/10 p-2 rounded-xl text-cyan-400 flex items-center justify-center">
                         <i class="fa-solid fa-dna"></i>
@@ -45,7 +60,6 @@ try {
                     <span class="text-lg font-bold text-white tracking-tight">Med<span class="text-cyan-400">Flow</span></span>
                 </div>
 
-                <!-- Admin Profile Quick View -->
                 <div class="bg-slate-800/40 border border-slate-700/30 p-3 rounded-xl flex items-center gap-3 mb-6">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 text-slate-950 flex items-center justify-center font-bold text-xs shadow-sm">
                         YA
@@ -56,7 +70,6 @@ try {
                     </div>
                 </div>
 
-                <!-- Navigation Links -->
                 <nav class="space-y-1 text-xs font-medium flex-1">
                     <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 mb-2">Gestion Principale</p>
                     
@@ -94,7 +107,6 @@ try {
                 </nav>
             </div>
 
-            <!-- Footer Sidebar -->
             <div class="p-4 border-t border-slate-800">
                 <a href="/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 hover:bg-rose-950/20 hover:text-rose-300 transition-all text-xs font-medium">
                     <i class="fa-solid fa-right-from-bracket text-sm"></i>
@@ -103,13 +115,10 @@ try {
             </div>
         </aside>
 
-        <!-- ================= MAIN CONTENT APP CONTAINER ================= -->
         <div class="flex flex-col flex-1 lg:pl-64">
             
-            <!-- TOP BAR / HEADER -->
             <header class="sticky top-0 z-10 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/80 backdrop-blur-md px-4 sm:px-6 lg:px-8 shadow-sm">
                 <div class="flex items-center gap-4">
-                    <!-- Mobile Menu Button (Icon only for design, add JS triggers if needed) -->
                     <button class="text-slate-500 hover:text-slate-700 lg:hidden text-lg">
                         <i class="fa-solid fa-bars"></i>
                     </button>
@@ -127,10 +136,8 @@ try {
                 </div>
             </header>
 
-            <!-- MAIN CONTENT AREA -->
             <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] w-full mx-auto">
                 
-                <!-- ================= SECTION : INDICATEURS GLOBAUX (KPI) ================= -->
                 <section id="stats" class="space-y-3">
                     <div class="flex items-center gap-2">
                         <span class="w-1 h-3.5 bg-cyan-500 rounded-full"></span>
@@ -138,7 +145,6 @@ try {
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Card 1 -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
                             <div class="space-y-1">
                                 <p class="text-xs font-medium text-slate-400">Taux d'Annulation</p>
@@ -150,7 +156,6 @@ try {
                             <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-chart-line-down"></i></div>
                         </div>
 
-                        <!-- Card 2 -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
                             <div class="space-y-1">
                                 <p class="text-xs font-medium text-slate-400">Moy. RDV / Praticien</p>
@@ -160,7 +165,6 @@ try {
                             <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
                         </div>
 
-                        <!-- Card 3 -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
                             <div class="space-y-1">
                                 <p class="text-xs font-medium text-slate-400">Total Consultations</p>
@@ -170,7 +174,6 @@ try {
                             <div class="w-12 h-12 rounded-xl bg-slate-50 text-slate-500 flex items-center justify-center text-lg shadow-inner"><i class="fa-solid fa-folder-closed"></i></div>
                         </div>
 
-                        <!-- Card 4 -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex justify-between items-center transition-all hover:shadow-md">
                             <div class="space-y-1">
                                 <p class="text-xs font-medium text-slate-400">Spécialités Actives</p>
@@ -182,10 +185,8 @@ try {
                     </div>
                 </section>
 
-                <!-- SPLIT CORE CONTENT LAYOUT -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
-                    <!-- ================= SECTION : GESTION DES MÉDECINS ================= -->
                     <section id="medecins" class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-6">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
                             <div>
@@ -196,69 +197,64 @@ try {
                             </div>
                         </div>
 
-                        <!-- Formulaire Nouveau compte -->
-            <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <div class="space-y-1">
-                    <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
-                            <i class="fa-regular fa-user"></i>
-                        </span>
-                        <input name="doctor_name" type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                    </div>
-                </div>
-                
-                <div class="space-y-1">
-                    <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
-                    <select name="specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                        <option value="">Choisir la spécialité...</option>
-                        
-                        <?php if (!empty($specialites)): ?>
-                            <?php foreach ($specialites as $spec): ?>
-                                <option value="<?php echo htmlspecialchars($spec['id']); ?>">
-                                    <?php echo htmlspecialchars($spec['nom']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <option value="" disabled>Aucune spécialité trouvée</option>
-                        <?php endif; ?>
-                        
-                    </select>
-                </div>
+                        <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                                            <i class="fa-regular fa-user"></i>
+                                        </span>
+                                        <input name="doctor_name" type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-1">
+                                    <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
+                                    <select name="specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                                        <option value="">Choisir la spécialité...</option>
+                                        <?php if (!empty($specialites)): ?>
+                                            <?php foreach ($specialites as $spec): ?>
+                                                <option value="<?php echo htmlspecialchars($spec['id']); ?>">
+                                                    <?php echo htmlspecialchars($spec['nom']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="" disabled>Aucune spécialité trouvée</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
 
-                <div class="space-y-1">
-                    <label class="block text-[11px] font-semibold text-slate-600">Adresse Email <span class="text-rose-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
-                            <i class="fa-regular fa-envelope"></i>
-                        </span>
-                        <input name="doctor_email" type="email" placeholder="dr.nom@medflow.com" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                    </div>
-                </div>
+                                <div class="space-y-1">
+                                    <label class="block text-[11px] font-semibold text-slate-600">Adresse Email <span class="text-rose-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                                            <i class="fa-regular fa-envelope"></i>
+                                        </span>
+                                        <input name="doctor_email" type="email" placeholder="dr.nom@medflow.com" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                                    </div>
+                                </div>
 
-                <div class="space-y-1">
-                    <label class="block text-[11px] font-semibold text-slate-600">Mot de passe <span class="text-rose-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                        <input name="doctor_password" type="password" placeholder="••••••••" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                    </div>
-                </div>
+                                <div class="space-y-1">
+                                    <label class="block text-[11px] font-semibold text-slate-600">Mot de passe <span class="text-rose-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                                            <i class="fa-solid fa-lock"></i>
+                                        </span>
+                                        <input name="doctor_password" type="password" placeholder="••••••••" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end pt-2">
+                                <button name="submit" type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
+                                </button>
+                            </div>
+                        </form>
 
-            </div>
-            
-            <div class="flex justify-end pt-2">
-                <button name="submit" type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
-                    <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
-                </button>
-            </div>
-        </form>
-                        <!-- Tableau de l'Équipe -->
                         <div class="overflow-x-auto border border-slate-200/60 rounded-xl shadow-sm">
                             <table class="w-full text-left text-xs min-w-[500px]">
                                 <thead>
@@ -270,40 +266,50 @@ try {
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
-                                    <!-- Row 1 -->
-                                    <tr class="hover:bg-slate-50/40 transition-colors">
-                                        <td class="p-3.5 pl-4 font-semibold text-slate-800">Dr. Ahmed Alami</td>
-                                        <td class="p-3.5 text-slate-500">Cardiologue</td>
-                                        <td class="p-3.5">
-                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium text-[10px]">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
-                                            </span>
-                                        </td>
-                                        <td class="p-3.5 pr-4 text-right space-x-3 font-medium">
-                                            <button type="button" class="text-cyan-600 hover:text-cyan-700 hover:underline">Modifier</button>
-                                            <button type="button" class="text-rose-600 hover:text-rose-700 hover:underline">Désactiver</button>
-                                        </td>
-                                    </tr>
-                                    <!-- Row 2 -->
-                                    <tr class="hover:bg-slate-50/40 transition-colors">
-                                        <td class="p-3.5 pl-4 font-semibold text-slate-800">Dr. Leila Tazi</td>
-                                        <td class="p-3.5 text-slate-500">Pédiatre</td>
-                                        <td class="p-3.5">
-                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 font-medium text-[10px]">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Désactivé
-                                            </span>
-                                        </td>
-                                        <td class="p-3.5 pr-4 text-right space-x-3 font-medium">
-                                            <button type="button" class="text-cyan-600 hover:text-cyan-700 hover:underline">Modifier</button>
-                                            <button type="button" class="text-emerald-600 hover:text-emerald-700 hover:underline">Réactiver</button>
-                                        </td>
-                                    </tr>
+                                    <?php if (!empty($doctorsList)): ?>
+                                        <?php foreach ($doctorsList as $doc): ?>
+                                            <tr class="hover:bg-slate-50/40 transition-colors">
+                                                <td class="p-3.5 pl-4 font-semibold text-slate-800">
+                                                    Dr. <?php echo htmlspecialchars($doc['doctor_name']); ?>
+                                                </td>
+                                                
+                                                <td class="p-3.5 text-slate-500">
+                                                    <?php echo htmlspecialchars($doc['specialite_nom']); ?>
+                                                </td>
+                                                
+                                                <td class="p-3.5">
+                                                    <?php if ($doc['statut'] === 'Actif'): ?>
+                                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium text-[10px]">
+                                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 font-medium text-[10px]">
+                                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Désactivé
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                
+                                                <td class="p-3.5 pr-4 text-right space-x-3 font-medium">
+                                                    <a href="edit_doctor.php?id=<?php echo $doc['id']; ?>" class="text-cyan-600 hover:text-cyan-700 hover:underline">Modifier</a>
+                                                    
+                                                    <?php if ($doc['statut'] === 'Actif'): ?>
+                                                        <a href="../src/controller/admin_controller.php?action=toggle_status&id=<?php echo $doc['id']; ?>" class="text-rose-600 hover:text-rose-700 hover:underline">Désactiver</a>
+                                                    <?php else: ?>
+                                                        <a href="../src/controller/admin_controller.php?action=toggle_status&id=<?php echo $doc['id']; ?>" class="text-emerald-600 hover:text-emerald-700 hover:underline">Réactiver</a>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="4" class="p-4 text-center text-slate-400">Aucun médecin trouvé dans la base de données.</td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </section>
 
-                    <!-- ================= SECTION : GESTION DES SPÉCIALITÉS ================= -->
                     <section id="specialites" class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
                         <div>
                             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -312,7 +318,6 @@ try {
                             <p class="text-[11px] text-slate-400">Ajoutez ou supprimez les filtres du parcours patient.</p>
                         </div>
 
-                        <!-- Form d'ajout rapide -->
                         <form class="flex gap-2">
                             <input type="text" placeholder="Ex: Neurologue..." class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
                             <button type="submit" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
@@ -320,32 +325,21 @@ try {
                             </button>
                         </form>
 
-                        <!-- Liste Spécialités -->
                         <div class="space-y-2 max-h-[290px] overflow-y-auto pr-1">
-                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
-                                <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-1 h-1 rounded-full bg-slate-400"></span> Cardiologue
-                                </span>
-                                <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
-                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
-                                <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-1 h-1 rounded-full bg-slate-400"></span> Généraliste
-                                </span>
-                                <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
-                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
-                                <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-1 h-1 rounded-full bg-slate-400"></span> Pédiatre
-                                </span>
-                                <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
+                            <?php if (!empty($specialites)): ?>
+                                <?php foreach ($specialites as $spec): ?>
+                                    <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
+                                        <span class="font-medium text-slate-700 flex items-center gap-2">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars($spec['nom']); ?>
+                                        </span>
+                                        <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="text-slate-400 text-center py-2">Aucune spécialité.</p>
+                            <?php endif; ?>
                         </div>
                     </section>
 
