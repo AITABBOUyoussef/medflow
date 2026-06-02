@@ -6,6 +6,8 @@ if (isset($_GET['action'])) {
         case 'login':
             echo "login";
             break;
+        case 'register':
+            echo 'register';
 
     }
 }
