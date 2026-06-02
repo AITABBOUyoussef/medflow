@@ -356,9 +356,9 @@ try {
                             <p class="text-[11px] text-slate-400">Ajoutez ou supprimez les filtres du parcours patient.</p>
                         </div>
 
-                        <form class="flex gap-2">
-                            <input type="text" placeholder="Ex: Neurologue..." class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
-                            <button type="submit" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
+                        <form action="../src/controller/admin_controller.php" method="POST" class="flex gap-2">
+                            <input name="spécialité_name" type="text" placeholder="Ex: Neurologue..." class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
+                            <button name="add_spécialité" type="submit" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
                                 Ajouter
                             </button>
                         </form>

@@ -65,4 +65,20 @@ public function getAllDoctors() {
         return [];
     }
 }
+public function creatSpécialité($name_spécialité){
+    try {
+        $query = "INSERT INTO `specialites` (`nom`) VALUES (:nom_specialite)";
+        $stmtUser = $this->db->prepare($query);
+        
+        $result = $stmtUser->execute([
+            ':nom_specialite' => $name_spécialité,
+        ]);
+        
+        return $result; 
+        
+    } catch(PDOException $e) {
+        error_log("Erreur createSpecialite : " . $e->getMessage());
+        return false;
+    }
+}
 }
