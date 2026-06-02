@@ -4,7 +4,7 @@ if (isset($_GET['action'])) {
 
     switch ($action) {
         case 'login':
-           echo "login";
+            echo "login";
             break;
 
     }
