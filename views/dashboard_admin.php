@@ -197,48 +197,67 @@ try {
                         </div>
 
                         <!-- Formulaire Nouveau compte -->
-                       <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
-    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        
-        <!-- Nom du Médecin -->
-        <div class="space-y-1">
-            <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
-            <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
-                    <i class="fa-regular fa-user"></i>
-                </span>
-                <input name="doctor_name" type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-            </div>
-        </div>
-        
-        <!-- Spécialité Dynamique -->
-        <div class="space-y-1">
-            <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
-            <select name="specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
-                <option value="">Choisir la spécialité...</option>
+            <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                <?php if (!empty($specialites)): ?>
-                    <?php foreach ($specialites as $spec): ?>
-                        <option value="<?php echo htmlspecialchars($spec['id']); ?>">
-                            <?php echo htmlspecialchars($spec['nom']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <option value="" disabled>Aucune spécialité trouvée</option>
-                <?php endif; ?>
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-semibold text-slate-600">Nom complet du Médecin <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+                        <input name="doctor_name" type="text" placeholder="Dr. Prénom Nom" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                    </div>
+                </div>
                 
-            </select>
-        </div>
-    </div>
-    
-    <div class="flex justify-end pt-2">
-        <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
-            <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
-        </button>
-    </div>
-</form>
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
+                    <select name="specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                        <option value="">Choisir la spécialité...</option>
+                        
+                        <?php if (!empty($specialites)): ?>
+                            <?php foreach ($specialites as $spec): ?>
+                                <option value="<?php echo htmlspecialchars($spec['id']); ?>">
+                                    <?php echo htmlspecialchars($spec['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <option value="" disabled>Aucune spécialité trouvée</option>
+                        <?php endif; ?>
+                        
+                    </select>
+                </div>
 
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-semibold text-slate-600">Adresse Email <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                            <i class="fa-regular fa-envelope"></i>
+                        </span>
+                        <input name="doctor_email" type="email" placeholder="dr.nom@medflow.com" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[11px] font-semibold text-slate-600">Mot de passe <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input name="doctor_password" type="password" placeholder="••••••••" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="flex justify-end pt-2">
+                <button name="submit" type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-[10px]"></i> Enregistrer le médecin
+                </button>
+            </div>
+        </form>
                         <!-- Tableau de l'Équipe -->
                         <div class="overflow-x-auto border border-slate-200/60 rounded-xl shadow-sm">
                             <table class="w-full text-left text-xs min-w-[500px]">
