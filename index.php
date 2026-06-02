@@ -15,7 +15,8 @@ if (isset($_GET['action'])) {
 
         case 'store_register':
             UserController::registerSubmitAction();
-            break;    
+            break;
+
 
     }
 }
