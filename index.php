@@ -7,10 +7,11 @@ if (isset($_GET['action'])) {
 
     switch ($action) {
         case 'login':
-            echo "login";
+           UserController::loginAction();
             break;
         case 'register':
-            echo 'register';
+            UserController::registerAction();
+            break;
 
     }
 }
