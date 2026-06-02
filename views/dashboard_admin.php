@@ -1,3 +1,9 @@
+<?php 
+session_start();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr" class="h-full bg-slate-50">
 <head>
