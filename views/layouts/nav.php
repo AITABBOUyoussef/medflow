@@ -42,10 +42,10 @@ $currentAction = $_GET['action'] ?? '';
 
     <hr class="my-2 border-gray-200">
 
-    <a href="#"
+    <a href="index.php?action=logoutAction"
        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-[#F4F3EF] hover:text-gray-800 transition-colors">
         <i class="ti ti-settings text-lg"></i>
-        Paramètres
+        Logout
     </a>
 
     <div class="mt-auto">

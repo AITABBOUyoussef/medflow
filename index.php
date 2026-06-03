@@ -45,6 +45,12 @@ if (isset($_GET['action'])) {
         case 'planning':
             MedecinController::planningAction();
             break;
+
+        case 'logoutAction':
+            UserController::logoutAction();
+            break;    
         
     }
+}{
+       UserController::loginAction();
 }

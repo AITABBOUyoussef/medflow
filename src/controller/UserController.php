@@ -65,7 +65,7 @@ require_once __DIR__ . "/../repository/UserRepository.php";
 
          if (!$user) {
             $_SESSION['error'] = "Invalid email or password.";
-            
+
              header('Location: index.php?action=login');
              exit;
          }
@@ -93,4 +93,13 @@ require_once __DIR__ . "/../repository/UserRepository.php";
          }
      }
 
+
+    public static function logoutAction()
+    {
+        session_start();
+        session_destroy();
+        header('Location: index.php?action=login');
+        exit;
+ }
+ 
 }
