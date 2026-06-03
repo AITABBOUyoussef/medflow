@@ -5,6 +5,8 @@ require_once __DIR__ . "/../repository/RendezVousRepository.php";
 
 class MedecinController
 {
+
+
     public static function dashboardAction()
     {
         if (!isset($_SESSION['user'])) {
@@ -23,8 +25,16 @@ class MedecinController
             $medecin->id
         );
 
+        $EN_ATTENTE_rdv = $rendezVousRepository->countByStatus('EN_ATTENTE');
+        $TERMINE_rdv = $rendezVousRepository->countByStatus('TERMINE');
+        $CONFIRME_rdv = $rendezVousRepository->countByStatus('CONFIRME');
+        $ANNULE_rdv = $rendezVousRepository->countByStatus('ANNULE');
+
+
         require_once __DIR__ . '/../../views/medecin/dashboard.php';
     }
+
+   
 
 
  
