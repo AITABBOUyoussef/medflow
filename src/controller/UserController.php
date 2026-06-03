@@ -52,10 +52,43 @@ require_once __DIR__ . "/../repository/UserRepository.php";
         }
     }
 
-    public static function loginSubmitAction()
-    {
-        // Handle login form submission
-    }
+     public static function loginSubmitAction()
+     {
+         session_start();
 
+         $email = $_POST['email'];
+         $password = $_POST['password'];
+
+         $userRepository = new UserRepository();
+
+         $user = $userRepository->login($email, $password);
+
+         if (!$user) {
+             header('Location: index.php?action=login');
+             exit;
+         }
+
+         $_SESSION['user'] = [
+             'id'      => $user->id,
+             'name'    => $user->name,
+             'email'   => $user->email,
+             'role'    => $user->role
+         ];
+
+         if ($user->role === 'MEDECIN') {
+             header('Location: index.php?action=medecin_dashboard');
+             exit;
+         }
+
+         if ($user->role === 'PATIENT') {
+             header('Location: index.php?action=patient_dashboard');
+             exit;
+         }
+
+         if ($user->role === 'ADMIN') {
+             header('Location: index.php?action=admin_dashboard');
+             exit;
+         }
+     }
 
 }
