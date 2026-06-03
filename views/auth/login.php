@@ -55,21 +55,7 @@
                 Access your MedFlow account
             </p>
 
-        <div class="text-center mb-8">
-
-            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-4xl">🔐</span>
-            </div>
-
-            <h2 class="text-3xl font-bold text-gray-800">
-                Welcome Back
-            </h2>
-
-            <p class="text-gray-500 mt-2">
-                Login to your account
-            </p>
-
-        </div>
+ 
 
         <form method="POST" action="index.php?action=login_submit" class="space-y-5">
 

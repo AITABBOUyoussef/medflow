@@ -1,6 +1,7 @@
 <?php
 
 include_once 'src/controller/UserController.php';
+include_once 'src/controller/MedecinController.php';
 
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -20,6 +21,10 @@ if (isset($_GET['action'])) {
         case 'login_submit':
             UserController::loginSubmitAction();
             break;
+        
+        case 'medecin_dashboard':
+            MedecinController::dashboardAction();
+            break;    
 
     }
 }
