@@ -81,4 +81,22 @@ public function creatSpécialité($name_spécialité){
         return false;
     }
 }
+public function updateDoctor(int $id, string $doctor_name, int $specialite_id, string $doctor_status): bool {
+    try {
+        $this->db->beginTransaction();
+
+        $stmtUser = $this->db->prepare("UPDATE users SET name = ?, statut = ? WHERE id = ?");
+        $stmtUser->execute([$doctor_name, $doctor_status, $id]);
+
+        $stmtMed = $this->db->prepare("UPDATE medecins SET specialite_id = ? WHERE user_id = ?");
+        $stmtMed->execute([$specialite_id, $id]);
+
+        $this->db->commit();
+        return true;
+
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        die("Erreur Repository: " . $e->getMessage()); 
+    }
+}
 }

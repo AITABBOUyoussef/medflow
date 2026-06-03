@@ -18,15 +18,15 @@ try {
     $stmtSpec->execute();
     $specialites = $stmtSpec->fetchAll(PDO::FETCH_ASSOC);
 
-    $queryDocs = "SELECT 
-                    users.id, 
-                    users.name AS doctor_name, 
-                    specialites.nom AS specialite_nom,
-                    'Actif' AS statut
-                  FROM users 
-                  INNER JOIN medecins ON users.id = medecins.user_id
-                  INNER JOIN specialites ON specialites.id = medecins.specialite_id
-                  ORDER BY users.id DESC";
+   $queryDocs = "SELECT 
+                users.id, 
+                users.name AS doctor_name, 
+                users.statut AS statut, 
+                specialites.nom AS specialite_nom
+              FROM users 
+              INNER JOIN medecins ON users.id = medecins.user_id
+              INNER JOIN specialites ON specialites.id = medecins.specialite_id
+              ORDER BY users.id DESC";
                   
     $stmtDocs = $db->prepare($queryDocs);
     $stmtDocs->execute();
@@ -55,6 +55,12 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
+$baseUrl = sprintf(
+    "%s://%s%s",
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+    $_SERVER['SERVER_NAME'],
+    dirname($_SERVER['REQUEST_URI'], 3) 
+);
 ?>
 
 <!DOCTYPE html>
@@ -149,7 +155,7 @@ try {
                             </div>
                         </div>
 
-                        <form action="../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
+                        <form action="<?php echo $baseUrl; ?>/src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -263,37 +269,38 @@ try {
                     </section>
 
                     <section id="specialites" class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                                <i class="fa-solid fa-stethoscope text-cyan-500"></i> Référentiel Spécialités
-                            </h2>
-                            <p class="text-[11px] text-slate-400">Ajoutez ou supprimez les filtres du parcours patient.</p>
-                        </div>
+    <div>
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-stethoscope text-cyan-500"></i> Référentiel Spécialités
+        </h2>
+        <p class="text-[11px] text-slate-400">Ajoutez ou supprimez les filtres du parcours patient.</p>
+    </div>
 
-                        <form action="../src/controller/admin_controller.php" method="POST" class="flex gap-2">
-                            <input name="spécialité_name" type="text" placeholder="Ex: Neurologue..." class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
-                            <button name="add_spécialité" type="submit" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
-                                Ajouter
-                            </button>
-                        </form>
+    <form action="<?php echo $baseUrl; ?>/src/controller/admin_controller.php" method="POST" class="flex items-center gap-2 w-full">
+        <input name="spécialité_name" type="text" placeholder="Ex: Neurologue..." class="flex-1 min-w-0 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
+        
+        <button name="add_spécialité" type="submit" class="shrink-0 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
+            Ajouter
+        </button>
+    </form>
 
-                        <div class="space-y-2 max-h-[290px] overflow-y-auto pr-1">
-                            <?php if (!empty($specialites)): ?>
-                                <?php foreach ($specialites as $spec): ?>
-                                    <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
-                                        <span class="font-medium text-slate-700 flex items-center gap-2">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars($spec['nom']); ?>
-                                        </span>
-                                        <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
-                                            <i class="fa-regular fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p class="text-slate-400 text-center py-2">Aucune spécialité.</p>
-                            <?php endif; ?>
-                        </div>
-                    </section>
+    <div class="space-y-2 max-h-[290px] overflow-y-auto pr-1">
+        <?php if (!empty($specialites)): ?>
+            <?php foreach ($specialites as $spec): ?>
+                <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
+                    <span class="font-medium text-slate-700 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars($spec['nom']); ?>
+                    </span>
+                    <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-slate-400 text-center py-2">Aucune spécialité.</p>
+        <?php endif; ?>
+    </div>
+</section>
 
                 </div>
             </main>
@@ -322,7 +329,7 @@ try {
         </div>
 
         <!-- Form -->
-        <form action="../src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
+        <form action="<?php echo $baseUrl; ?>/src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
             <!-- Hidden Input for Doctor ID -->
             <input type="hidden" name="action" value="update_doctor">
             <input type="hidden" name="doctor_id" id="edit_doctor_id">
@@ -377,7 +384,7 @@ try {
 function openEditModal(id, name, specialiteNom, statut) {
     const modal = document.getElementById('editDoctorModal');
     const box = document.getElementById('modalBox');
-
+    console.log("الـ ID لي داز لـ الـ JS هو: ", id);
     document.getElementById('edit_doctor_id').value = id;
     document.getElementById('edit_doctor_name').value = name;
     document.getElementById('edit_doctor_status').value = statut;
