@@ -247,19 +247,22 @@ $baseUrl = sprintf(
                                                             </span>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <td class="p-3.5 pr-4 text-right space-x-3 font-medium">
+                                                    <td class="p-3.5 pr-4 text-right font-medium inline-flex items-center justify-end gap-2 w-full">
                                                         <button type="button"
                                                             onclick="openEditModal(<?php echo $doc['id']; ?>, '<?php echo addslashes($doc['doctor_name']); ?>', '<?php echo addslashes($doc['specialite_nom']); ?>', '<?php echo $doc['statut']; ?>')"
-                                                            class="text-cyan-600 hover:text-cyan-700 hover:underline bg-transparent border-none cursor-pointer">
+                                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-cyan-600 bg-cyan-50/50 hover:bg-cyan-50 rounded-xl transition-all border-none cursor-pointer group">
+                                                            <i class="fa-regular fa-pen-to-square text-[13px] transition-transform group-hover:scale-110"></i>
                                                             Modifier
                                                         </button>
 
                                                         <?php if ($doc['statut'] === 'Actif'): ?>
-                                                            <button type="button" class="text-rose-600 hover:text-rose-700 hover:underline bg-transparent border-none cursor-pointer font-medium">
+                                                            <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50/50 hover:bg-rose-50 rounded-xl transition-all border-none cursor-pointer group">
+                                                                <i class="fa-regular fa-user-xmark text-[13px] transition-transform group-hover:scale-110"></i>
                                                                 Désactiver
                                                             </button>
                                                         <?php else: ?>
-                                                            <button type="button" class="text-emerald-600 hover:text-emerald-700 hover:underline bg-transparent border-none cursor-pointer font-medium">
+                                                            <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50/50 hover:bg-emerald-50 rounded-xl transition-all border-none cursor-pointer group">
+                                                                <i class="fa-regular fa-user-check text-[13px] transition-transform group-hover:scale-110"></i>
                                                                 Réactiver
                                                             </button>
                                                         <?php endif; ?>
