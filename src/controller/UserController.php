@@ -52,8 +52,10 @@ require_once __DIR__ . "/../repository/UserRepository.php";
         }
     }
 
-    
-  
+    public static function loginSubmitAction()
+    {
+        // Handle login form submission
+    }
 
 
 }
