@@ -236,7 +236,7 @@
             document.getElementById('view-semaine').classList.toggle('hidden', !isSemaine);
             document.getElementById('view-liste').classList.toggle('hidden', isSemaine);
 
-            // Toggle Styles boutons actifs/inactifs
+          
             const sBtn = document.getElementById('tab-semaine');
             const lBtn = document.getElementById('tab-liste');
 

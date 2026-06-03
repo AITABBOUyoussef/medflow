@@ -104,7 +104,7 @@ $hoursRange = ['08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '1
                                 <?php for ($i = 0; $i < 7; $i++): 
                                     $currentDayDate = (clone $monday)->modify("+{$i} days")->format('Y-m-d');
                                     
-                                    // جلب مواعيد هذا اليوم وتلك الساعة بالتحديد
+                                  
                                     $matchedRdvs = array_filter($rendezVous, function ($r) use ($currentDayDate, $hour) {
                                         if (empty($r->date_rdv)) return false;
                                         try {
@@ -119,10 +119,9 @@ $hoursRange = ['08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '1
                                                 $style = getStatusStyle($rdv->status);
                                                 $rdvTime = (new DateTime($rdv->date_rdv))->format('H:i');
                                                 
-                                                // تفعيل نافذة الإغلاق فقط إذا كان الموعد مؤكداً
-                                                $clickAction = $rdv->status === 'CONFIRME' ? "onclick=\"openComplete({$rdv->id}, '" . addslashes($rdv->patient_name) . "', '{$rdvTime}', '" . addslashes($rdv->motif ?? '') . "')\"" : "";
-                                            ?>
-                                                <div <?= $clickAction ?> class="<?= $style['bg'] ?> border p-1.5 rounded-lg shadow-2xs cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xs">
+                                                
+                                             ?>
+                                                <div   class="<?= $style['bg'] ?> border p-1.5 rounded-lg shadow-2xs cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xs">
                                                     <div class="flex items-center justify-between font-bold text-[10px] mb-0.5">
                                                         <span><?= $rdvTime ?></span>
                                                         <span class="w-1.5 h-1.5 rounded-full <?= $style['dot'] ?>"></span>
@@ -167,29 +166,7 @@ $hoursRange = ['08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '1
         </div>
     </div>
 
-    <script>
-        function openComplete(id, patient, date, motif) {
-            document.getElementById('modal-rdv-id').value = id;
-            document.getElementById('modal-patient').textContent = patient || '—';
-            document.getElementById('modal-date').textContent = date || '—';
-            document.getElementById('modal-motif').textContent = motif || '—';
-            document.getElementById('ordonnance-text').value = '';
-
-            const overlay = document.getElementById('modal-overlay');
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-        }
-
-        function closeModal() {
-            const overlay = document.getElementById('modal-overlay');
-            overlay.classList.add('hidden');
-            overlay.classList.remove('flex');
-        }
-
-        document.getElementById('modal-overlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-    </script>
+   
 </body>
 
 </html>
