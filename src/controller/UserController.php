@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once __DIR__ . "/../repository/UserRepository.php";
 
  class UserController
@@ -22,19 +22,38 @@ require_once __DIR__ . "/../repository/UserRepository.php";
             $email = $_POST['email'];
             $password = $_POST['password'];
             $birthDate = $_POST['birth_date'];
-
-
+            
+            if(empty($name) || empty($email) || empty($password) || empty($birthDate)) {
+                $_SESSION['error'] = "All fields are required.";
+                header("Location: index.php?action=register");
+                exit();
+            }
+               
             $userRepo = new UserRepository();
+             
+            $existingUser = $userRepo->findByEmail($email);
+
+            if ($existingUser) {
+                $_SESSION['error'] = "A user with that email already exists.";
+                header("Location: index.php?action=register");
+                exit();
+            }
+
             $userId = $userRepo->register($name, $email, $password, $birthDate);
 
             if ($userId) {
                 header("Location: index.php?action=login");
                 exit();
             } else {
-                echo "Registration failed.";
+                $_SESSION['error'] = "Registration failed.";
+                header("Location: index.php?action=register");
+                exit();
             }
         }
     }
+
+    
+  
 
 
 }
