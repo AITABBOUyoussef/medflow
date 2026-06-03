@@ -215,68 +215,6 @@ $baseUrl = sprintf(
                                 </button>
                             </div>
                         </form>
-
-                        <div class="overflow-x-auto border border-slate-200/60 rounded-xl shadow-sm">
-                            <table class="w-full text-left text-xs min-w-[500px]">
-                                <thead>
-                                    <tr class="bg-slate-50/70 text-slate-500 font-semibold border-b border-slate-200/60">
-                                        <th class="p-3.5 pl-4">Médecin</th>
-                                        <th class="p-3.5">Spécialité</th>
-                                        <th class="p-3.5">Statut</th>
-                                        <th class="p-3.5 pr-4 text-right">Actions</th>
-                                    </tr>
-                                    <thead>
-                                    <tbody class="divide-y divide-slate-100">
-                                        <?php if (!empty($doctorsList)): ?>
-                                            <?php foreach ($doctorsList as $doc): ?>
-                                                <tr class="hover:bg-slate-50/40 transition-colors">
-                                                    <td class="p-3.5 pl-4 font-semibold text-slate-800">
-                                                        Dr. <?php echo htmlspecialchars($doc['doctor_name']); ?>
-                                                    </td>
-                                                    <td class="p-3.5 text-slate-500">
-                                                        <?php echo htmlspecialchars($doc['specialite_nom']); ?>
-                                                    </td>
-                                                    <td class="p-3.5">
-                                                        <?php if ($doc['statut'] === 'Actif'): ?>
-                                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium text-[10px]">
-                                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Actif
-                                                            </span>
-                                                        <?php else: ?>
-                                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-200 text-red-600 font-medium text-[10px]">
-                                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Désactivé
-                                                            </span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td class="p-3.5 pr-4 text-right font-medium inline-flex items-center justify-end gap-2 w-full">
-                                                        <button type="button"
-                                                            onclick="openEditModal(<?php echo $doc['id']; ?>, '<?php echo addslashes($doc['doctor_name']); ?>', '<?php echo addslashes($doc['specialite_nom']); ?>', '<?php echo $doc['statut']; ?>')"
-                                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-cyan-600 bg-cyan-50/50 hover:bg-cyan-50 rounded-xl transition-all border-none cursor-pointer group">
-                                                            <i class="fa-regular fa-pen-to-square text-[13px] transition-transform group-hover:scale-110"></i>
-                                                            Modifier
-                                                        </button>
-
-                                                        <!-- <?php if ($doc['statut'] === 'Actif'): ?>
-                                                            <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50/50 hover:bg-rose-50 rounded-xl transition-all border-none cursor-pointer group">
-                                                                <i class="fa-regular fa-user-xmark text-[13px] transition-transform group-hover:scale-110"></i>
-                                                                Désactiver
-                                                            </button>
-                                                        <?php else: ?>
-                                                            <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50/50 hover:bg-emerald-50 rounded-xl transition-all border-none cursor-pointer group">
-                                                                <i class="fa-regular fa-user-check text-[13px] transition-transform group-hover:scale-110"></i>
-                                                                Réactiver
-                                                            </button>
-                                                        <?php endif; ?> -->
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="4" class="p-4 text-center text-slate-400">Aucun médecin trouvé dans la base de données.</td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                            </table>
-                        </div>
                     </section>
 
                     <section id="specialites" class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
@@ -396,52 +334,7 @@ $baseUrl = sprintf(
 
         </div>
     </div>
-    <script>
-        function openEditModal(id, name, specialiteNom, statut) {
-            const modal = document.getElementById('editDoctorModal');
-            const box = document.getElementById('modalBox');
-            console.log("الـ ID لي داز لـ الـ JS هو: ", id);
-            document.getElementById('edit_doctor_id').value = id;
-            document.getElementById('edit_doctor_name').value = name;
-            document.getElementById('edit_doctor_status').value = statut;
-
-            const selectSpec = document.getElementById('edit_specialite_id');
-            for (let i = 0; i < selectSpec.options.length; i++) {
-                if (selectSpec.options[i].text.trim() === specialiteNom.trim()) {
-                    selectSpec.selectedIndex = i;
-                    break;
-                }
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-
-            setTimeout(() => {
-                box.classList.remove('scale-95', 'opacity-0');
-                box.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeEditModal() {
-            const modal = document.getElementById('editDoctorModal');
-            const box = document.getElementById('modalBox');
-
-            box.classList.remove('scale-100', 'opacity-100');
-            box.classList.add('scale-95', 'opacity-0');
-
-            setTimeout(() => {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('editDoctorModal');
-            if (event.target === modal) {
-                closeEditModal();
-            }
-        }
-    </script>
+    
 </body>
 
 </html>

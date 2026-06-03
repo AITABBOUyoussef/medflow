@@ -20,7 +20,7 @@
         <nav class="space-y-1 text-xs font-medium flex-1">
             <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 mb-2">Gestion Principale</p>
             
-            <a href='' class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 font-semibold transition-all">
+            <a href='../admin/dashboard_admin.php' class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 font-semibold transition-all">
                 <i class="fa-solid fa-chart-pie text-sm"></i>
                 <span>Vue d'ensemble (KPIs)</span>
             </a>
@@ -37,9 +37,9 @@
 
             <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 pt-6 mb-2">Contrôle & Cycles</p>
 
-            <a href="#rendezvous" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 hover:text-white text-slate-400 transition-all">
+            <a href="../admin/table_doctors.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 hover:text-white text-slate-400 transition-all">
                 <i class="fa-regular fa-calendar-check text-sm"></i>
-                <span>Flux des Rendez-vous</span>
+                <span>Gestion des médecin</span>
             </a>
 
             <a href="#patients" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 hover:text-white text-slate-400 transition-all">
