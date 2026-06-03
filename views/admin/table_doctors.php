@@ -220,7 +220,6 @@ $baseUrl = sprintf(
         function openEditModal(id, name, specialiteNom, statut) {
             const modal = document.getElementById('editDoctorModal');
             const box = document.getElementById('modalBox');
-            console.log("الـ ID لي داز لـ الـ JS هو: ", id);
             document.getElementById('edit_doctor_id').value = id;
             document.getElementById('edit_doctor_name').value = name;
             document.getElementById('edit_doctor_status').value = statut;
