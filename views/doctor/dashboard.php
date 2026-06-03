@@ -1,1 +1,4 @@
-echo "fabskaord";
+<?php
+echo "Doctor Dashboard";
+
+?>
