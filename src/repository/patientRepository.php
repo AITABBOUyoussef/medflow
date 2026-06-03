@@ -1,29 +1,24 @@
 <?php
 
-class PatientRepository
+class PatientController
 {
-    private $db;
+    private $repository;
 
-    public function __construct($db)
+    public function __construct($repository)
     {
-        $this->db = $db;
+        $this->repository = $repository;
     }
 
-    public function searchDoctor($keyword)
+    public function search()
     {
-        $sql = "SELECT m.id, u.name,  s.nom  FROM medecins m
-               
-                JOIN users u ON m.user_id = u.id
-                JOIN specialites s ON m.specialite_id = s.id
-                WHERE u.name LIKE ?
-                OR s.nom LIKE ?";
+        $keyword = $_GET['search'] ?? '';
 
-        $stmt = $this->db->prepare($sql);
+        $doctors = [];
 
-        $search = "%".$keyword."%";
+        if (!empty($keyword)) {
+            $doctors = $this->repository->searchDoctor($keyword);
+        }
 
-        $stmt->execute([$search, $search]);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        require_once "../views/search.php";
     }
 }
