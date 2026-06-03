@@ -38,5 +38,9 @@ if (isset($_GET['action'])) {
             MedecinController::completeRdvAction();
             break;
 
+        case 'list_rdv':
+            MedecinController::listAction();
+            break;
+
     }
 }
