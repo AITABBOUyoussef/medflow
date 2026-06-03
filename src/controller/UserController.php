@@ -64,6 +64,8 @@ require_once __DIR__ . "/../repository/UserRepository.php";
          $user = $userRepository->login($email, $password);
 
          if (!$user) {
+            $_SESSION['error'] = "Invalid email or password.";
+            
              header('Location: index.php?action=login');
              exit;
          }

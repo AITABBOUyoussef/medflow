@@ -17,6 +17,9 @@ if (isset($_GET['action'])) {
             UserController::registerSubmitAction();
             break;
 
+        case 'login_submit':
+            UserController::loginSubmitAction();
+            break;
 
     }
 }

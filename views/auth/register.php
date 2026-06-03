@@ -13,6 +13,7 @@
 <body class="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-6">
 
 <div class="w-full max-w-5xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
+   
 
     <!-- Left Side -->
     <div class="hidden md:flex flex-col justify-center items-center p-10 text-white">
@@ -37,6 +38,14 @@
     <!-- Right Side -->
     <div class="bg-white p-10">
 
+        <?php 
+        if (isset($_SESSION['error'])) {
+            echo '<div class="bg-red-100 text-red-700 p-4 rounded mb-6 text-center">';
+            echo $_SESSION['error'];
+            echo '</div>';
+            unset($_SESSION['error']);
+        }
+        ?>
         <div class="text-center mb-8">
 
             <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
