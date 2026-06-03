@@ -33,23 +33,31 @@
     <!-- Right Side -->
     <div class="bg-white p-10">
 
-        <div class="text-center mb-8">
+     <?php 
+        if (isset($_SESSION['error'])) {
+            echo '<div class="bg-red-100 text-red-700 p-4 rounded mb-6 text-center">';
+            echo $_SESSION['error'];
+            echo '</div>';
+            unset($_SESSION['error']);
+        }
+        ?>
+         <div class="text-center mb-8">
 
             <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-4xl">🔐</span>
+                <span class="text-4xl">👨‍⚕️</span>
             </div>
 
             <h2 class="text-3xl font-bold text-gray-800">
-                Welcome Back
+                Sign In
             </h2>
 
             <p class="text-gray-500 mt-2">
-                Login to your account
+                Access your MedFlow account
             </p>
 
-        </div>
+ 
 
-        <form method="POST" action="index.php?action=store_login" class="space-y-5">
+        <form method="POST" action="index.php?action=login_submit" class="space-y-5">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">
