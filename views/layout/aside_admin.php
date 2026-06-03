@@ -20,7 +20,7 @@
         <nav class="space-y-1 text-xs font-medium flex-1">
             <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 mb-2">Gestion Principale</p>
             
-            <a href="#stats" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 font-semibold transition-all">
+            <a href='' class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 font-semibold transition-all">
                 <i class="fa-solid fa-chart-pie text-sm"></i>
                 <span>Vue d'ensemble (KPIs)</span>
             </a>

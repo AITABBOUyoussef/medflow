@@ -239,7 +239,11 @@ try {
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="p-3.5 pr-4 text-right space-x-3 font-medium">
-                                                    <a href="edit_doctor.php?id=<?php echo $doc['id']; ?>" class="text-cyan-600 hover:text-cyan-700 hover:underline">Modifier</a>
+                                                <button type="button" 
+                                                    onclick="openEditModal(<?php echo $doc['id']; ?>, '<?php echo addslashes($doc['doctor_name']); ?>', '<?php echo addslashes($doc['specialite_nom']); ?>', '<?php echo $doc['statut']; ?>')" 
+                                                    class="text-cyan-600 hover:text-cyan-700 hover:underline bg-transparent border-none cursor-pointer">
+                                                Modifier
+                                                </button>
                                                     <?php if ($doc['statut'] === 'Actif'): ?>
                                                         <a href="../src/controller/admin_controller.php?action=toggle_status&id=<?php echo $doc['id']; ?>" class="text-rose-600 hover:text-rose-700 hover:underline">Désactiver</a>
                                                     <?php else: ?>
@@ -295,6 +299,126 @@ try {
             </main>
         </div>
     </div>
+        <!-- Edit Doctor Modal (Hidden by Default) -->
+<div id="editDoctorModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-all duration-300">
+    
+    <!-- Modal Content Box -->
+    <div class="bg-white w-full max-w-md rounded-2xl border border-slate-200/80 shadow-2xl overflow-hidden transform transition-all scale-95 duration-300 opacity-0" id="modalBox">
+        
+        <!-- Header -->
+        <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <span class="p-2 bg-cyan-50 text-cyan-600 rounded-xl text-xs shadow-inner">
+                    <i class="fa-solid fa-user-pen"></i>
+                </span>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Modifier le Praticien</h3>
+                    <p class="text-[10px] text-slate-400 font-medium">Mettre à jour les accès du médecin</p>
+                </div>
+            </div>
+            <button onclick="closeEditModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
 
+        <!-- Form -->
+        <form action="../src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
+            <!-- Hidden Input for Doctor ID -->
+            <input type="hidden" name="action" value="update_doctor">
+            <input type="hidden" name="doctor_id" id="edit_doctor_id">
+
+            <!-- Name Input -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-semibold text-slate-600">Nom complet <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-xs">
+                        <i class="fa-regular fa-user"></i>
+                    </span>
+                    <input name="doctor_name" id="edit_doctor_name" type="text" class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                </div>
+            </div>
+
+            <!-- Specialite Select -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-semibold text-slate-600">Spécialité Principale <span class="text-rose-500">*</span></label>
+                <select name="specialite_id" id="edit_specialite_id" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" required>
+                    <option value="">Choisir...</option>
+                    <?php foreach ($specialites as $spec): ?>
+                        <option value="<?php echo htmlspecialchars($spec['id']); ?>">
+                            <?php echo htmlspecialchars($spec['nom']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Status Select -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-semibold text-slate-600">Statut du Compte</label>
+                <select name="doctor_status" id="edit_doctor_status" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all">
+                    <option value="Actif">Actif</option>
+                    <option value="Désactivé">Désactivé</option>
+                </select>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100 mt-6">
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">
+                    Annuler
+                </button>
+                <button type="submit" name="submit_update" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm shadow-cyan-600/10 flex items-center gap-2">
+                    <i class="fa-regular fa-floppy-disk"></i> Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script>
+function openEditModal(id, name, specialiteNom, statut) {
+    const modal = document.getElementById('editDoctorModal');
+    const box = document.getElementById('modalBox');
+
+    document.getElementById('edit_doctor_id').value = id;
+    document.getElementById('edit_doctor_name').value = name;
+    document.getElementById('edit_doctor_status').value = statut;
+
+    const selectSpec = document.getElementById('edit_specialite_id');
+    for (let i = 0; i < selectSpec.options.length; i++) {
+        if (selectSpec.options[i].text.trim() === specialiteNom.trim()) {
+            selectSpec.selectedIndex = i;
+            break;
+        }
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editDoctorModal');
+    const box = document.getElementById('modalBox');
+
+    box.classList.remove('scale-100', 'opacity-100');
+    box.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }, 200);
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('editDoctorModal');
+    if (event.target === modal) {
+        closeEditModal();
+    }
+}
+
+</script>
 </body>
 </html>
