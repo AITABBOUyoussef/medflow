@@ -42,5 +42,9 @@ if (isset($_GET['action'])) {
             MedecinController::listAction();
             break;
 
+        case 'planning':
+            MedecinController::planningAction();
+            break;
+        
     }
 }

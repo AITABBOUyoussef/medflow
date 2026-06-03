@@ -95,10 +95,28 @@ class MedecinController
 
         require_once __DIR__ . '/../../views/medecin/list.php';
      }
+    
 
+     public static function planningAction()
+     {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
 
- 
+        $medecinRepository = new MedecinRepository();
+        $rendezVousRepository = new RendezVousRepository();
 
+        $medecin = $medecinRepository->findByUserId(
+            $_SESSION['user']['id']
+        );
+
+        $rendezVous = $rendezVousRepository->findByMedecin(
+            $medecin->id
+        );
+
+        require_once __DIR__ . '/../../views/medecin/planning.php';
+     }
  
 
   
