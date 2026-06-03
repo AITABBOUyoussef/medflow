@@ -55,4 +55,15 @@ class MedecinRepository
     }
 
 
+    public static function cancelRdvAction()
+    {
+        $repository = new RendezVousRepository();
+
+        $repository->cancel($_GET['id']);
+
+        header('Location: index.php?action=medecin_dashboard');
+        exit;
+    }
+
+
 }
