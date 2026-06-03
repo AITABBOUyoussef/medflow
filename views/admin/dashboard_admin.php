@@ -1,5 +1,5 @@
 <?php
-require_once '../config/database.php'; 
+require_once __DIR__ . '/../../config/database.php';
 
 $totalRDV = 0;
 $totalSpecialites = 0;
@@ -76,11 +76,11 @@ try {
 
     <div class="flex min-h-screen">
         
-        <?php include_once __DIR__ . '/aside_admin.php'; ?>
+        <?php include_once __DIR__ . '/../layout/aside_admin.php'; ?>
 
         <div class="flex flex-col flex-1 lg:pl-64">
             
-            <?php include_once __DIR__ . '/header_admin.php'; ?>
+            <?php include_once __DIR__ . '/../layout/header_admin.php'; ?>
 
             <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] w-full mx-auto">
                 
