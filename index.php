@@ -51,6 +51,4 @@ if (isset($_GET['action'])) {
             break;    
         
     }
-}{
-       UserController::loginAction();
-}
+} 

@@ -28,6 +28,14 @@
 
 <body class="bg-[#F4F3EF] font-sans min-h-screen text-gray-800">
 
+<?php if (isset($_GET['msg'])): ?>
+<div id="toast"
+     class="fixed top-5 right-5 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50">
+    <?= htmlspecialchars($_GET['msg']) ?>
+</div>
+ 
+<?php endif; ?>
+
     <?php include 'views/layouts/nav.php'; ?>
 
     <main class="ml-[220px] p-8 pb-16">
@@ -226,9 +234,7 @@
         </div>
     </div>
 
-    <div id="toast" class="hidden fixed bottom-6 right-6 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm items-center gap-2 shadow-md z-[300]">
-        <i class="ti ti-check text-green-600 text-base"></i> <span id="toast-msg">jvgjgjgj</span>
-    </div>
+ 
 
     <script>
         function showView(view) {
@@ -267,18 +273,14 @@
         });
 
         
-        (function() {
-            const msg = new URLSearchParams(window.location.search).get('msg');
-            if (msg) {
-                const t = document.getElementById('toast');
-                document.getElementById('toast-msg').textContent = decodeURIComponent(msg);
-                t.classList.remove('hidden');
-                t.classList.add('flex');
-                setTimeout(() => {
-                    t.classList.add('hidden');
-                }, 3000);
-            }
-        })();
+
+
+        setTimeout(() => {
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.remove();
+    }
+}, 3000);
     </script>
 
 </body>

@@ -42,7 +42,8 @@ class MedecinController
 
         $repository->confirm($_GET['id']);
 
-        header('Location: index.php?action=medecin_dashboard');
+            header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous confirmé');
+
         exit;
     }
 
@@ -53,7 +54,7 @@ class MedecinController
 
         $repository->cancel($_GET['id']);
 
-        header('Location: index.php?action=medecin_dashboard');
+        header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous annulé');
         exit;
     }
     
@@ -69,7 +70,7 @@ class MedecinController
         $ordonnanceRepository = new OrdonnanceRepository();
         $ordonnanceRepository->create($id, $ordonnance);
 
-        header('Location: index.php?action=medecin_dashboard');
+        header('Location: index.php?action=medecin_dashboard&msg=Ordonnance enregistrée');
         exit;
 
      }   
