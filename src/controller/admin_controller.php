@@ -38,6 +38,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    if (isset($_POST['action']) && $_POST['action'] === 'delete_specialite') {
+        
+        $specialite_name = trim($_POST['specialite_name'] ?? '');
+
+        if (!empty($specialite_name)) {
+            
+            $isDeleted = $repository->deleteSpécialité($specialite_name);
+
+            if ($isDeleted) {
+                $_SESSION['success'] = "La spécialité a été supprimée avec succès !";
+            } else {
+                $_SESSION['error'] = "Impossible de supprimer la spécialité. Elle est peut-être liée à un médecin.";
+            }
+        } else {
+            $_SESSION['error'] = "Nom de spécialité invalide.";
+        }
+
+        header('Location: ../../views/admin/dashboard_admin.php');
+        exit();
+    }
+
     if (isset($_POST['doctor_name']) && !isset($_POST['action'])) { 
         
         $doctor_name     = trim($_POST['doctor_name'] ?? '');

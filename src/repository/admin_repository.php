@@ -99,4 +99,17 @@ public function updateDoctor(int $id, string $doctor_name, int $specialite_id, s
         die("Erreur Repository: " . $e->getMessage()); 
     }
 }
+public function deleteSpécialité(string $name): bool {
+    try {
+        $query = "DELETE FROM specialites WHERE nom = ?";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$name]);
+
+        return $stmt->rowCount() > 0;
+
+    } catch (PDOException $e) {
+        die("Erreur Repository (Delete Spécialité): " . $e->getMessage()); 
+    }
+}
 }

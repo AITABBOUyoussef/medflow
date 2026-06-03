@@ -255,7 +255,7 @@ $baseUrl = sprintf(
                                                             Modifier
                                                         </button>
 
-                                                        <?php if ($doc['statut'] === 'Actif'): ?>
+                                                        <!-- <?php if ($doc['statut'] === 'Actif'): ?>
                                                             <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50/50 hover:bg-rose-50 rounded-xl transition-all border-none cursor-pointer group">
                                                                 <i class="fa-regular fa-user-xmark text-[13px] transition-transform group-hover:scale-110"></i>
                                                                 Désactiver
@@ -265,7 +265,7 @@ $baseUrl = sprintf(
                                                                 <i class="fa-regular fa-user-check text-[13px] transition-transform group-hover:scale-110"></i>
                                                                 Réactiver
                                                             </button>
-                                                        <?php endif; ?>
+                                                        <?php endif; ?> -->
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -294,18 +294,23 @@ $baseUrl = sprintf(
                                 Ajouter
                             </button>
                         </form>
-
                         <div class="space-y-2 max-h-[290px] overflow-y-auto pr-1">
                             <?php if (!empty($specialites)): ?>
                                 <?php foreach ($specialites as $spec): ?>
-                                    <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
+                                    <form action="<?php echo $baseUrl; ?>/src/controller/admin_controller.php" method="POST" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
+
+                                        <input type="hidden" name="action" value="delete_specialite">
+                                        <input type="hidden" name="specialite_name" value="<?php echo htmlspecialchars($spec['nom']); ?>">
+
                                         <span class="font-medium text-slate-700 flex items-center gap-2">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars($spec['nom']); ?>
+                                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                                            <?php echo htmlspecialchars($spec['nom']); ?>
                                         </span>
-                                        <button type="button" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100">
+
+                                        <button type="submit" class="text-slate-400 hover:text-rose-600 transition-colors text-xs opacity-0 group-hover:opacity-100 lg:opacity-100 bg-transparent border-none cursor-pointer">
                                             <i class="fa-regular fa-trash-can"></i>
                                         </button>
-                                    </div>
+                                    </form>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <p class="text-slate-400 text-center py-2">Aucune spécialité.</p>
