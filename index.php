@@ -24,7 +24,11 @@ if (isset($_GET['action'])) {
         
         case 'medecin_dashboard':
             MedecinController::dashboardAction();
-            break;    
+            break;   
+            
+        case 'confirm_rdv':
+            MedecinRepository::confirmRdvAction();
+            break;
 
     }
 }
