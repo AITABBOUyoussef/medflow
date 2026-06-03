@@ -1,33 +1,30 @@
 <?php
 
-class Patient
+namespace Src\Entities;
+
+class Patient extends User
 {
-    private int $id;
-    private int $userId;
-    private ?string $birthDate;
+    private string $birthDate;
 
     public function __construct(
-        int $id,
-        int $userId,
-        ?string $birthDate
+        int $id = 0,
+        string $name = '',
+        string $email = '',
+        string $password = '',
+        int $roleId = 0,
+        string $birthDate = ''
     ) {
-        $this->id = $id;
-        $this->userId = $userId;
+        parent::__construct($id, $name, $email, $password, $roleId);
         $this->birthDate = $birthDate;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    public function getBirthDate(): ?string
+    public function getBirthDate(): string
     {
         return $this->birthDate;
+    }
+
+    public function setBirthDate(string $birthDate): void
+    {
+        $this->birthDate = $birthDate;
     }
 }
