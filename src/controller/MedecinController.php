@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/../repository/MedecinRepository.php";
 require_once __DIR__ . "/../repository/RendezVousRepository.php";
+require_once __DIR__ . "/../repository/OrdonnanceRepository.php";
 
 class MedecinController
 {
@@ -35,6 +36,43 @@ class MedecinController
     }
 
    
+     public static function confirmRdvAction()
+    {
+        $repository = new RendezVousRepository();
+
+        $repository->confirm($_GET['id']);
+
+        header('Location: index.php?action=medecin_dashboard');
+        exit;
+    }
+
+
+    public static function cancelRdvAction()
+    {
+        $repository = new RendezVousRepository();
+
+        $repository->cancel($_GET['id']);
+
+        header('Location: index.php?action=medecin_dashboard');
+        exit;
+    }
+    
+    public static function completeRdvAction()
+    {
+
+      $id = $_POST['rdv_id'];
+        $ordonnance = $_POST['ordonnance'] ;
+      $reporendtory = new RendezVousRepository();
+      $reporendtory->finish($_POST['rdv_id']);
+      
+
+        $ordonnanceRepository = new OrdonnanceRepository();
+        $ordonnanceRepository->create($id, $ordonnance);
+
+        header('Location: index.php?action=medecin_dashboard');
+        exit;
+
+     }   
 
 
  

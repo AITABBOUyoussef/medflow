@@ -27,7 +27,15 @@ if (isset($_GET['action'])) {
             break;   
             
         case 'confirm_rdv':
-            MedecinRepository::confirmRdvAction();
+            MedecinController::confirmRdvAction();
+            break;
+
+        case 'cancel_rdv':
+            MedecinController::cancelRdvAction();
+            break;
+
+        case 'show_complete_rdv':
+            MedecinController::completeRdvAction();
             break;
 
     }

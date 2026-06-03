@@ -44,26 +44,6 @@ class MedecinRepository
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public static function confirmRdvAction()
-    {
-        $repository = new RendezVousRepository();
-
-        $repository->confirm($_GET['id']);
-
-        header('Location: index.php?action=medecin_dashboard');
-        exit;
-    }
-
-
-    public static function cancelRdvAction()
-    {
-        $repository = new RendezVousRepository();
-
-        $repository->cancel($_GET['id']);
-
-        header('Location: index.php?action=medecin_dashboard');
-        exit;
-    }
-
+   
 
 }
