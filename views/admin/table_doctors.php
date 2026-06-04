@@ -183,7 +183,7 @@ $baseUrl = sprintf(
                 </button>
             </div>
             <!-- Bdel had sstar -->
-            <form action="../../src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
+            <form action="<?php echo $baseUrl; ?>/index.php?action=update_doctor" method="POST" class="p-6 space-y-4">
                 <input type="hidden" name="action" value="update_doctor">
                 <input type="hidden" id="edit_doctor_id" name="doctor_id">
 
