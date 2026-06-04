@@ -1,19 +1,14 @@
 <?php
 
 include_once __DIR__ . "/../../config/DB.php";
+include_once __DIR__ . "/BaseRepository.php";
 
-class RendezVousRepository
+class RendezVousRepository extends BaseRepository
 {
-    private $pdo;
-
-    public function __construct()
+ 
+    public static function findAll()
     {
-        $this->pdo = DB::connect();
-    }
-
-    public function findAll()
-    {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT *
             FROM rendez_vous
             ORDER BY date_rdv DESC
@@ -24,9 +19,9 @@ class RendezVousRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function findById($id)
+    public static function findById($id)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT *
             FROM rendez_vous
             WHERE id = ?
@@ -37,9 +32,9 @@ class RendezVousRepository
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function findByMedecin($medecinId)
+    public static function findByMedecin($medecinId)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT rv.*,
                    u.name AS patient_name
             FROM rendez_vous rv
@@ -56,9 +51,9 @@ class RendezVousRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function findByPatient($patientId)
+    public static function findByPatient($patientId)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT *
             FROM rendez_vous
             WHERE patient_id = ?
@@ -70,9 +65,9 @@ class RendezVousRepository
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function create($patientId, $medecinId, $dateRdv)
+    public static function create($patientId, $medecinId, $dateRdv)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             INSERT INTO rendez_vous
             (patient_id, medecin_id, date_rdv, status)
             VALUES (?, ?, ?, 'EN_ATTENTE')
@@ -85,9 +80,9 @@ class RendezVousRepository
         ]);
     }
 
-    public function updateStatus($id, $status)
+    public static function updateStatus($id, $status)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             UPDATE rendez_vous
             SET status = ?
             WHERE id = ?
@@ -99,24 +94,24 @@ class RendezVousRepository
         ]);
     }
 
-    public function confirm($id)
+    public static function confirm($id)
     {
-        return $this->updateStatus($id, 'CONFIRME');
+        return self::updateStatus($id, 'CONFIRME');
     }
 
-    public function cancel($id)
+    public static function cancel($id)
     {
-        return $this->updateStatus($id, 'ANNULE');
+        return self::updateStatus($id, 'ANNULE');
     }
 
-    public function finish($id)
+    public static function finish($id)
     {
-        return $this->updateStatus($id, 'TERMINE');
+        return self::updateStatus($id, 'TERMINE');
     }
 
-    public function delete($id)
+    public static function delete($id)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             DELETE FROM rendez_vous
             WHERE id = ?
         ");
@@ -124,9 +119,9 @@ class RendezVousRepository
         return $stmt->execute([$id]);
     }
 
-    public function countAll()
+    public static function countAll()
     {
-        $stmt = $this->pdo->query("
+        $stmt = self::getConnection()->query("
             SELECT COUNT(*) AS total
             FROM rendez_vous
         ");
@@ -134,13 +129,11 @@ class RendezVousRepository
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-public function countByStatus($status): int
+public static function countByStatus($status): int
 {
-    $stmt = $this->pdo->prepare("
-        SELECT COUNT(*) AS total
-        FROM rendez_vous
-        WHERE status = ?
-    ");
+    $stmt = self::getConnection()->prepare(
+        "SELECT COUNT(*) AS total FROM rendez_vous WHERE status = ?"
+    );
 
     $stmt->execute([$status]);
 
