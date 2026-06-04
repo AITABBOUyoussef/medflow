@@ -15,8 +15,6 @@ class MedecinController
             exit;
         }
 
-    
-
         $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
         );
@@ -29,7 +27,6 @@ class MedecinController
         $TERMINE_rdv = RendezVousRepository::countByStatus('TERMINE');
         $CONFIRME_rdv = RendezVousRepository::countByStatus('CONFIRME');
         $ANNULE_rdv = RendezVousRepository::countByStatus('ANNULE');
-
 
         require_once __DIR__ . '/../../views/medecin/dashboard.php';
     }
@@ -57,7 +54,7 @@ class MedecinController
 
       $id = $_POST['rdv_id'];
         $ordonnance = $_POST['ordonnance'] ;
-        
+
         RendezVousRepository::finish($_POST['rdv_id']);
         OrdonnanceRepository::create($id, $ordonnance);
 
