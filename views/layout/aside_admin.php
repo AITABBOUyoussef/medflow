@@ -17,10 +17,10 @@
             </div>
         </div>
 
-        <nav class="space-y-1 text-xs font-medium flex-1">
+        <nav id="sidebar-nav" class="space-y-1 text-xs font-medium flex-1">
             <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 mb-2">Gestion Principale</p>
             
-            <a href='../admin/dashboard_admin.php' class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-600/10 text-cyan-400 font-semibold transition-all">
+            <a href='../admin/dashboard_admin.php' class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/60 hover:text-white text-slate-400 transition-all">
                 <i class="fa-solid fa-chart-pie text-sm"></i>
                 <span>Vue d'ensemble (KPIs)</span>
             </a>
@@ -61,3 +61,49 @@
         </a>
     </div>
 </aside>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll("#sidebar-nav a");
+    
+    function setActiveLink(activeLink) {
+        navLinks.forEach(link => {
+            link.classList.remove("bg-cyan-600/10", "text-cyan-400", "font-semibold");
+            link.classList.add("text-slate-400", "hover:bg-slate-800/60", "hover:text-white");
+        });    
+        activeLink.classList.add("bg-cyan-600/10", "text-cyan-400", "font-semibold");
+        activeLink.classList.remove("text-slate-400", "hover:bg-slate-800/60", "hover:text-white");
+    }
+
+    const currentPath = window.location.pathname; 
+    const currentHash = window.location.hash;     
+
+    let matched = false;
+
+    navLinks.forEach(link => {
+        const href = link.getAttribute("href");
+
+        if (!href.startsWith("#")) {
+            const linkFile = href.substring(href.lastIndexOf('/') + 1);
+            const currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+
+            if (linkFile === currentFile && currentFile !== "") {
+                setActiveLink(link);
+                matched = true;
+            }
+        } 
+        else if (currentHash && href === currentHash) {
+            setActiveLink(link);
+            matched = true;
+        }      
+
+        link.addEventListener("click", function () {
+            setActiveLink(this);
+        });
+    });
+
+    if (!matched && navLinks.length > 0 && (currentPath.endsWith('dashboard_admin.php') || currentPath.endsWith('/'))) {
+        setActiveLink(navLinks[0]);
+    }
+});
+</script>
