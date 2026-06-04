@@ -28,18 +28,7 @@ $currentAction = $_GET['action'] ?? '';
         Patients & RDV
     </a>
 
-    <a href="#"
-       class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-[#F4F3EF] hover:text-gray-800 transition-colors">
-        <i class="ti ti-users text-lg"></i>
-        Patients
-    </a>
-
-    <a href="#"
-       class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-[#F4F3EF] hover:text-gray-800 transition-colors">
-        <i class="ti ti-file-text text-lg"></i>
-        Ordonnances
-    </a>
-
+    
     <hr class="my-2 border-gray-200">
 
     <a href="index.php?action=logoutAction"

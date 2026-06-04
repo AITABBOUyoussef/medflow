@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../repository/MedecinRepository.php";
 require_once __DIR__ . "/../repository/RendezVousRepository.php";
 require_once __DIR__ . "/../repository/OrdonnanceRepository.php";
+require_once __DIR__ . "/../Middleware/Middleware.php";
 
 class MedecinController
 {
@@ -10,10 +11,7 @@ class MedecinController
 
     public static function dashboardAction()
     {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
-            exit;
-        }
+        Middleware::medecin();
 
         $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
@@ -34,6 +32,8 @@ class MedecinController
    
      public static function confirmRdvAction()
     {
+        Middleware::medecin();
+        
         RendezVousRepository::confirm($_GET['id']);
 
         header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous confirmé');
@@ -43,18 +43,18 @@ class MedecinController
 
     public static function cancelRdvAction()
     {
+        Middleware::medecin();
         RendezVousRepository::cancel($_GET['id']);
-
         header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous annulé');
         exit;
     }
     
     public static function completeRdvAction()
     {
+        Middleware::medecin();
 
       $id = $_POST['rdv_id'];
         $ordonnance = $_POST['ordonnance'] ;
-
         RendezVousRepository::finish($_POST['rdv_id']);
         OrdonnanceRepository::create($id, $ordonnance);
 
@@ -66,10 +66,8 @@ class MedecinController
 
      public static function listAction()
      {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
-            exit;
-        }
+        Middleware::medecin();
+
 
         $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
@@ -85,10 +83,8 @@ class MedecinController
 
      public static function planningAction()
      {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
-            exit;
-        }
+        Middleware::medecin();
+
 
         $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
