@@ -126,8 +126,8 @@ $baseUrl = sprintf(
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-400"></span> Actif
                                             </span>
                                         <?php else: ?>
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-semibold text-[10px] border border-slate-200/40">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Désactivé
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-300 text-red-600 font-semibold text-[10px] border border-slate-200/40">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> Désactivé
                                             </span>
                                         <?php endif; ?>
                                     </td>

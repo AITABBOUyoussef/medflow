@@ -13,7 +13,6 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role_id INT NOT NULL,
-
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id)
         REFERENCES roles(id)
@@ -26,7 +25,6 @@ CREATE TABLE patients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     birth_date DATE,
-
     CONSTRAINT fk_patient_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)

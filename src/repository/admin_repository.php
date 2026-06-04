@@ -101,13 +101,13 @@ public function updateDoctor(int $id, string $doctor_name, int $specialite_id, s
 }
 public function deleteSpécialité(string $name): bool {
     try {
-        $query = "DELETE FROM specialites WHERE nom = ?";
-        
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([$name]);
-
-        return $stmt->rowCount() > 0;
-
+        $queryDocs = "DELETE FROM medecins WHERE specialite_id = (SELECT id FROM specialites WHERE nom = ?)";
+        $stmtDocs = $this->db->prepare($queryDocs);
+        $stmtDocs->execute([$name]);
+        $querySpec = "DELETE FROM specialites WHERE nom = ?";
+        $stmtSpec = $this->db->prepare($querySpec);
+        $stmtSpec->execute([$name]);
+        return $stmtSpec->rowCount() > 0;
     } catch (PDOException $e) {
         die("Erreur Repository (Delete Spécialité): " . $e->getMessage()); 
     }
