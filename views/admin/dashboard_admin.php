@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $totalRDV = 0;
 $totalSpecialites = 0;
 $totalMedecins = 0;
@@ -54,11 +58,12 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
 $baseUrl = sprintf(
     "%s://%s%s",
     isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
     $_SERVER['SERVER_NAME'],
-    dirname($_SERVER['REQUEST_URI'], 3)
+    dirname($requestPath !== '' ? $requestPath : '/', 3)
 );
 ?>
 

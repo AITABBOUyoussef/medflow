@@ -7,30 +7,7 @@ class AdminController
 {
     private $repository;
 
-    private static function basePath()
-    {
-        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-        $suffix = '/src/controller';
 
-        if ($scriptDir === '' || $scriptDir === '/') {
-            return '';
-        }
-
-        if (str_ends_with($scriptDir, $suffix)) {
-            return substr($scriptDir, 0, -strlen($suffix));
-        }
-
-        return $scriptDir;
-    }
-
-    private static function redirectTo($path)
-    {
-        $base = rtrim(self::basePath(), '/');
-        $target = $base === '' ? $path : $base . $path;
-
-        header('Location: ' . $target);
-        exit;
-    }
 
     public function __construct()
     {
@@ -167,5 +144,32 @@ class AdminController
     public static function tableDoctorsAction()
     {
         self::redirectTo('/views/admin/table_doctors.php');
+    }
+
+
+
+        private static function basePath()
+    {
+        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+        $suffix = '/src/controller';
+
+        if ($scriptDir === '' || $scriptDir === '/') {
+            return '';
+        }
+
+        if (str_ends_with($scriptDir, $suffix)) {
+            return substr($scriptDir, 0, -strlen($suffix));
+        }
+
+        return $scriptDir;
+    }
+
+    private static function redirectTo($path)
+    {
+        $base = rtrim(self::basePath(), '/');
+        $target = $base === '' ? $path : $base . $path;
+
+        header('Location: ' . $target);
+        exit;
     }
 }

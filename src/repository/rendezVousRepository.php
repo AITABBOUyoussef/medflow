@@ -142,4 +142,37 @@ public static function countByStatus($status): int
     return (int) $result['total'];
 }
 
+ public function book(int $patientId, int $medecinId, int $disponibiliteId, string $dateRdv): bool
+    {
+        try {
+            self::getConnection()->beginTransaction();
+
+            // 1. Insert the appointment
+            $sql = "
+                INSERT INTO rendez_vous (patient_id, medecin_id, disponibilite_id, date_rdv, status)
+                VALUES (?, ?, ?, ?, 'EN_ATTENTE')
+            ";
+            $stmt = self::getConnection()->prepare($sql);
+            $stmt->execute([$patientId, $medecinId, $disponibiliteId, $dateRdv]);
+
+            // 2. Mark the slot as taken so no other patient can book it
+            $sqlSlot = "UPDATE disponibilites SET disponible = FALSE WHERE id = ?";
+            $stmtSlot = self::getConnection()->prepare($sqlSlot);
+            $stmtSlot->execute([$disponibiliteId]);
+
+            self::getConnection()->commit();
+            return true;
+
+        } catch (\Exception $e) {
+            self::getConnection()->rollBack();
+            return false;
+        }
+    }
+
+    /**
+     * Update appointment status (used by doctor, but also cancellable by patient).
+     */
+ 
+ 
+
 }
