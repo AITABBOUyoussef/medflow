@@ -134,5 +134,3 @@ $nextRdv = !empty($upcoming) ? reset($upcoming) : null;
 </main>
 </body>
 </html>
-
-
