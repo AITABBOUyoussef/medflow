@@ -1,23 +1,18 @@
 <?php
 include_once __DIR__ . "/../../config/DB.php";
-class UserRepository
+include_once __DIR__ . "/BaseRepository.php";
+class UserRepository extends BaseRepository
 {
-    private $pdo;
-
-    public function __construct()
+   
+    public static function register($name, $email, $password, $birthDate)
     {
-        $this->pdo = DB::connect();
-    }
-
-    public  function register($name, $email, $password, $birthDate)
-    {
-        $stmt = $this->pdo->prepare("SELECT id FROM roles WHERE label = 'PATIENT'");
+        $stmt = self::getConnection()->prepare("SELECT id FROM roles WHERE label = 'PATIENT'");
         $stmt->execute();
 
         $role = $stmt->fetch(PDO::FETCH_ASSOC);
         $roleId = $role['id'];
 
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
         INSERT INTO users(name, email, password, role_id)
         VALUES(?, ?, ?, ?)
     ");
@@ -29,9 +24,9 @@ class UserRepository
             $roleId
         ]);
 
-        $userId = $this->pdo->lastInsertId();
+        $userId = self::getConnection()->lastInsertId();
 
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
         INSERT INTO patients(user_id, birth_date)
         VALUES(?, ?)
     ");
@@ -44,16 +39,16 @@ class UserRepository
         return $userId;
     }
 
-    public function findByEmail($email)
+    public static function findByEmail($email)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt = self::getConnection()->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function login($email, $password)
+    public static function login($email, $password)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
         SELECT
             users.*,
             roles.label AS role
