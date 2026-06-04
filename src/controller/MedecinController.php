@@ -66,7 +66,6 @@ class MedecinController
       $reporendtory = new RendezVousRepository();
       $reporendtory->finish($_POST['rdv_id']);
       
-
         $ordonnanceRepository = new OrdonnanceRepository();
         $ordonnanceRepository->create($id, $ordonnance);
 
