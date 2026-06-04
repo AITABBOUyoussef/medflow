@@ -13,7 +13,7 @@ class PatientController
     {
         $keyword = $_GET['search'] ?? '';
 
-        $medecins = $this->repository->searchDoctor($keyword);
+        $medecins = $this->repository->searchDoctors($keyword);
 
         require_once "../views/search.php";
     }

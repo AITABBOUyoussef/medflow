@@ -1,7 +1,7 @@
 <?php
 
-require_once DIR . "/Env.php";
-Env::load(DIR . "/../.env");
+require_once __DIR__ . "/Env.php";
+Env::load(__DIR__ . "/../.env");
 class DB {
 
     public static function connect() {
