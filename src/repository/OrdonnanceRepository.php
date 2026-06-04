@@ -1,19 +1,15 @@
 <?php
 
 include_once __DIR__ . "/../../config/DB.php";
+include_once __DIR__ . "/BaseRepository.php";
 
-class OrdonnanceRepository
+class OrdonnanceRepository extends BaseRepository
 {
-    private $pdo;
+  
 
-    public function __construct()
+    public static function create($rendezVousId, $contenu)
     {
-        $this->pdo = DB::connect();
-    }
-
-    public function create($rendezVousId, $contenu)
-    {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             INSERT INTO ordonnances
             (rendez_vous_id, contenu)
             VALUES (?, ?)

@@ -1,19 +1,14 @@
 <?php
 
 include_once __DIR__ . "/../../config/DB.php";
+include_once __DIR__ . "/BaseRepository.php";
 
-class MedecinRepository
+class MedecinRepository extends BaseRepository
 {
-    private $pdo;
-
-    public function __construct()
+  
+    public static function findById($id)
     {
-        $this->pdo = DB::connect();
-    }
-
-    public function findById($id)
-    {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT m.*,
                    u.name,
                    u.email,
@@ -31,9 +26,9 @@ class MedecinRepository
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function findByUserId($userId)
+    public static function findByUserId($userId)
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = self::getConnection()->prepare("
             SELECT *
             FROM medecins
             WHERE user_id = ?
