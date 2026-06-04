@@ -15,21 +15,20 @@ class MedecinController
             exit;
         }
 
-        $medecinRepository = new MedecinRepository();
-        $rendezVousRepository = new RendezVousRepository();
+    
 
-        $medecin = $medecinRepository->findByUserId(
+        $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
         );
 
-        $rendezVous = $rendezVousRepository->findByMedecin(
+        $rendezVous = RendezVousRepository::findByMedecin(
             $medecin->id
         );
 
-        $EN_ATTENTE_rdv = $rendezVousRepository->countByStatus('EN_ATTENTE');
-        $TERMINE_rdv = $rendezVousRepository->countByStatus('TERMINE');
-        $CONFIRME_rdv = $rendezVousRepository->countByStatus('CONFIRME');
-        $ANNULE_rdv = $rendezVousRepository->countByStatus('ANNULE');
+        $EN_ATTENTE_rdv = RendezVousRepository::countByStatus('EN_ATTENTE');
+        $TERMINE_rdv = RendezVousRepository::countByStatus('TERMINE');
+        $CONFIRME_rdv = RendezVousRepository::countByStatus('CONFIRME');
+        $ANNULE_rdv = RendezVousRepository::countByStatus('ANNULE');
 
 
         require_once __DIR__ . '/../../views/medecin/dashboard.php';
@@ -38,21 +37,16 @@ class MedecinController
    
      public static function confirmRdvAction()
     {
-        $repository = new RendezVousRepository();
+        RendezVousRepository::confirm($_GET['id']);
 
-        $repository->confirm($_GET['id']);
-
-            header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous confirmé');
-
+        header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous confirmé');
         exit;
     }
 
 
     public static function cancelRdvAction()
     {
-        $repository = new RendezVousRepository();
-
-        $repository->cancel($_GET['id']);
+        RendezVousRepository::cancel($_GET['id']);
 
         header('Location: index.php?action=medecin_dashboard&msg=Rendez-vous annulé');
         exit;
@@ -63,11 +57,9 @@ class MedecinController
 
       $id = $_POST['rdv_id'];
         $ordonnance = $_POST['ordonnance'] ;
-      $reporendtory = new RendezVousRepository();
-      $reporendtory->finish($_POST['rdv_id']);
-      
-        $ordonnanceRepository = new OrdonnanceRepository();
-        $ordonnanceRepository->create($id, $ordonnance);
+        
+        RendezVousRepository::finish($_POST['rdv_id']);
+        OrdonnanceRepository::create($id, $ordonnance);
 
         header('Location: index.php?action=medecin_dashboard&msg=Ordonnance enregistrée');
         exit;
@@ -82,14 +74,11 @@ class MedecinController
             exit;
         }
 
-        $medecinRepository = new MedecinRepository();
-        $rendezVousRepository = new RendezVousRepository();
-
-        $medecin = $medecinRepository->findByUserId(
+        $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
         );
 
-        $rendezVous = $rendezVousRepository->findByMedecin(
+        $rendezVous = RendezVousRepository::findByMedecin(
             $medecin->id
         );
 
@@ -104,14 +93,11 @@ class MedecinController
             exit;
         }
 
-        $medecinRepository = new MedecinRepository();
-        $rendezVousRepository = new RendezVousRepository();
-
-        $medecin = $medecinRepository->findByUserId(
+        $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
         );
 
-        $rendezVous = $rendezVousRepository->findByMedecin(
+        $rendezVous = RendezVousRepository::findByMedecin(
             $medecin->id
         );
 

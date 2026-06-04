@@ -29,9 +29,7 @@ require_once __DIR__ . "/../repository/UserRepository.php";
                 exit();
             }
                
-            $userRepo = new UserRepository();
-             
-            $existingUser = $userRepo->findByEmail($email);
+            $existingUser = UserRepository::findByEmail($email);
 
             if ($existingUser) {
                 $_SESSION['error'] = "A user with that email already exists.";
@@ -39,7 +37,7 @@ require_once __DIR__ . "/../repository/UserRepository.php";
                 exit();
             }
 
-            $userId = $userRepo->register($name, $email, $password, $birthDate);
+            $userId = UserRepository::register($name, $email, $password, $birthDate);
 
             if ($userId) {
                 header("Location: index.php?action=login");
@@ -59,9 +57,7 @@ require_once __DIR__ . "/../repository/UserRepository.php";
          $email = $_POST['email'];
          $password = $_POST['password'];
 
-         $userRepository = new UserRepository();
-
-         $user = $userRepository->login($email, $password);
+         $user = UserRepository::login($email, $password);
 
          if (!$user) {
             $_SESSION['error'] = "Invalid email or password.";
