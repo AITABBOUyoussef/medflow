@@ -2,6 +2,9 @@
 
 include_once 'src/controller/UserController.php';
 include_once 'src/controller/MedecinController.php';
+require_once 'src/controller/admin_controller.php';
+
+$controller = new AdminController();
 
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -48,7 +51,31 @@ if (isset($_GET['action'])) {
 
         case 'logoutAction':
             UserController::logoutAction();
-            break;    
+            break;   
+            
+         case 'create_doctor':
+        $controller->createDoctor();
+        break;
+
+    case 'update_doctor':
+        $controller->updateDoctor();
+        break;
+
+    case 'create_specialite':
+        $controller->createSpecialite();
+        break;
+
+    case 'delete_specialite':
+        $controller->deleteSpecialite();
+        break;  
+
+    case 'admin_dashboard':
+        AdminController::dashboardAction();
+        break; 
+        
+    case 'tableDoctorsAction':
+         AdminController::tableDoctorsAction();
+         break;
         
     }
 }else{

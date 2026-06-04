@@ -168,7 +168,7 @@ $baseUrl = sprintf(
                                 <i class="fa-solid fa-triangle-exclamation mr-2"></i> <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
                             </div>
                         <?php endif; ?>
-                        <form action="../../src/controller/admin_controller.php" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
+                        <form action="<?php echo htmlspecialchars($baseUrl . '/index.php?action=create_doctor'); ?>" method="POST" class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/60 space-y-4">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Création d'un compte Praticien</p>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -236,7 +236,7 @@ $baseUrl = sprintf(
                         </div>
 
                         <!-- Formulaire dyal l'ajout -->
-                        <form action="../../src/controller/admin_controller.php" method="POST" class="flex items-center gap-2 w-full">
+                        <form action="<?php echo $baseUrl; ?>/index.php?action=create_specialite" method="POST" class="flex items-center gap-2 w-full">
                             <input name="specialite_name" type="text" placeholder="Ex: Neurologue..." class="flex-1 min-w-0 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 bg-white transition-all">
 
                             <button name="add_specialite" type="submit" class="shrink-0 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
@@ -248,7 +248,7 @@ $baseUrl = sprintf(
                             <?php if (!empty($specialites)): ?>
                                 <?php foreach ($specialites as $spec): ?>
                                     <!-- Formulaire dyal la suppression -->
-                                    <form action="../../src/controller/admin_controller.php" method="POST" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
+                                    <form action="<?php echo $baseUrl; ?>/index.php?action=delete_specialite" method="POST" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all text-xs group">
 
                                         <input type="hidden" name="action" value="delete_specialite">
                                         <input type="hidden" name="specialite_name" value="<?php echo htmlspecialchars($spec['nom']); ?>">
@@ -297,7 +297,7 @@ $baseUrl = sprintf(
 
             <!-- Form -->
 
-            <form action="../../src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
+            <form action="<?php echo $baseUrl; ?>/index.php?action=update_doctor" method="POST" class="p-6 space-y-4">
                 <!-- Hidden Input for Doctor ID -->
                 <input type="hidden" name="action" value="update_doctor">
                 <input type="hidden" name="doctor_id" id="edit_doctor_id">
