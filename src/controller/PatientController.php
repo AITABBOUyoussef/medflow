@@ -18,5 +18,3 @@ class PatientController
         require_once "../views/search.php";
     }
 }
-
-
