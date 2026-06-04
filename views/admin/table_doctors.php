@@ -83,7 +83,17 @@ $baseUrl = sprintf(
     </div>
 
     <main class="pt-24 pb-12 px-4 sm:px-6 lg:pl-72 max-w-[1600px] mx-auto transition-all duration-300">
-        
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="bg-emerald-50 text-emerald-700 p-3 rounded-lg mb-4 text-sm border border-emerald-200">
+                <i class="fa-solid fa-check-circle mr-2"></i> <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="bg-rose-50 text-rose-700 p-3 rounded-lg mb-4 text-sm border border-rose-200">
+                <i class="fa-solid fa-triangle-exclamation mr-2"></i> <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+            </div>
+        <?php endif; ?>
         <div class="mb-6">
             <h1 class="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-user-doctor text-cyan-500"></i> Liste des Médecins
@@ -172,8 +182,8 @@ $baseUrl = sprintf(
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
-
-            <form action="<?php echo $baseUrl; ?>/src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
+            <!-- Bdel had sstar -->
+            <form action="../../src/controller/admin_controller.php" method="POST" class="p-6 space-y-4">
                 <input type="hidden" name="action" value="update_doctor">
                 <input type="hidden" id="edit_doctor_id" name="doctor_id">
 

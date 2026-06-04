@@ -1,7 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../repository/admin_repository.php';
 require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../Repository/admin_repository.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $doctor_status = trim($_POST['doctor_status'] ?? 'Actif');
 
         if ($doctor_id > 0 && !empty($doctor_name) && $specialite_id > 0) {
-            
+
             $isUpdated = $repository->updateDoctor($doctor_id, $doctor_name, $specialite_id, $doctor_status);
 
             if ($isUpdated) {
@@ -30,12 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['error'] = "Une erreur est survenue lors de la modification dans la base de données.";
             }
             
-        } else {
-            $_SESSION['error'] = "Veuillez vérifier les informations saisies. Tous les champs sont obligatoires.";
         }
-
-        header('Location: ../../views/admin/dashboard_admin.php');
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        } else {
+            header('Location: ../../views/admin/table_doctors.php');
+        }
         exit();
+
     }
 
     if (isset($_POST['action']) && $_POST['action'] === 'delete_specialite') {
@@ -71,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $repository->createDoctor($doctor_name, $doctor_email, $doctor_password, $specialite_id);
 
             if ($result) {
-                $_SESSION['success'] = "Le حساب du Dr. " . htmlspecialchars($doctor_name) . " a été créé avec succès !";
+                $_SESSION['success'] = "Le Total du Dr. " . htmlspecialchars($doctor_name) . " a été créé avec succès !";
             } else {
                 $_SESSION['error'] = "Une erreur est survenue lors de la création du compte. L'email est peut-être déjà utilisé.";
             }
@@ -83,25 +85,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    if (isset($_POST['add_spécialité'])) {
-        $name_spécialité = htmlspecialchars(trim($_POST['spécialité_name'] ?? ''));
+    if (isset($_POST['add_specialite'])) {
+        $name_specialite = htmlspecialchars(trim($_POST['specialite_name'] ?? ''));
 
-        if (empty($name_spécialité)) {
-            header('Location: ../../views/admin/dashboard_admin.php?erreur_empty');
-            exit(); 
-        }
-        
-        $succ = $repository->creatSpécialité($name_spécialité);
-
-        if ($succ) {
-            header('Location: ../../views/admin/dashboard_admin.php?op=scc');
-            exit();
+        if (empty($name_specialite)) {
+            $_SESSION['error'] = "Veuillez entrer un nom de spécialité.";
         } else {
-            header('Location: ../../views/admin/dashboard_admin.php?error=db_error');
-            exit();
+            $succ = $repository->creatSpécialité($name_specialite);
+
+            if ($succ) {
+                $_SESSION['success'] = "La spécialité a été ajoutée avec succès !";
+            } else {
+                $_SESSION['error'] = "Erreur lors de l'ajout (la spécialité existe peut-être déjà).";
+            }
         }
+
+        header('Location: ../../views/admin/dashboard_admin.php');
+        exit();
     }
 }
 
-header('Location: ../../views/admin/dashboard_admin.php');
-exit();
