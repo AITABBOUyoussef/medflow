@@ -42,12 +42,10 @@
 
 ## 📊 Modélisation UML & ERD
 
-*(Les diagrammes ci-dessous sont générés via Mermaid.js)*
-
 ### 1. Diagramme des Cas d'Utilisation (Use Case)
  
 <img width="1017" height="867" alt="usecaqe1" src="https://github.com/user-attachments/assets/09501aa9-614d-450c-a515-146ad2567bc2" />
-### 1. Diagramme des Cas Class
+### 2. Diagramme des Cas Class
 <img width="1128" height="891" alt="umlumluml" src="https://github.com/user-attachments/assets/8f554f0d-071a-496e-bbd2-37d64424b810" />
-### 1. Diagramme ERD
+### 3. Diagramme ERD
 <img width="1130" height="892" alt="ERD" src="https://github.com/user-attachments/assets/aa0242e3-f344-4925-869e-b7b020e59b26" />
