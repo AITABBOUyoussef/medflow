@@ -15,7 +15,7 @@ if (isset($_GET['action'])) {
 
     switch ($action) {
         case 'login':
-            UserController::loginAction();
+           UserController::loginAction();
             break;
         case 'register':
             UserController::registerAction();
@@ -28,11 +28,11 @@ if (isset($_GET['action'])) {
         case 'login_submit':
             UserController::loginSubmitAction();
             break;
-
+        
         case 'medecin_dashboard':
             MedecinController::dashboardAction();
-            break;
-
+            break;   
+            
         case 'confirm_rdv':
             MedecinController::confirmRdvAction();
             break;
@@ -55,19 +55,6 @@ if (isset($_GET['action'])) {
 
         case 'logoutAction':
             UserController::logoutAction();
-            break;
-
-        case 'disponibilites':
-            MedecinController::disponibilitesAction();
-            break;
-
-        case 'add_disponibilite':
-            MedecinController::addDisponibiliteAction();
-            break;
-    }
-} else {
-    UserController::loginAction();
-}
             break;   
             
          case 'create_doctor':
@@ -96,7 +83,15 @@ if (isset($_GET['action'])) {
     case 'patient_dashboard':
         
         $patientController->ActionDashbaordPatient();
-        break;     
+        break;  
+   
+        case 'disponibilites':
+            MedecinController::disponibilitesAction();
+            break;
+
+        case 'add_disponibilite':
+            MedecinController::addDisponibiliteAction();
+            break;        
         
     }
 }else{
