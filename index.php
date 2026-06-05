@@ -2,6 +2,13 @@
 
 include_once 'src/controller/UserController.php';
 include_once 'src/controller/MedecinController.php';
+require_once 'src/controller/admin_controller.php';
+require_once 'src/controller/PatientController.php';
+require_once 'config/DB.php';
+require_once 'src/repository/patientRepository.php';
+
+$controller = new AdminController();
+$patientController = new PatientController(new PatientRepository(DB::connect()));
 
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -59,5 +66,39 @@ if (isset($_GET['action'])) {
             break;
     }
 } else {
+    UserController::loginAction();
+}
+            break;   
+            
+         case 'create_doctor':
+        $controller->createDoctor();
+        break;
+
+    case 'update_doctor':
+        $controller->updateDoctor();
+        break;
+
+    case 'create_specialite':
+        $controller->createSpecialite();
+        break;
+
+    case 'delete_specialite':
+        $controller->deleteSpecialite();
+        break;  
+
+    case 'admin_dashboard':
+        AdminController::dashboardAction();
+        break; 
+        
+    case 'tableDoctorsAction':
+         AdminController::tableDoctorsAction();
+         break;
+    case 'patient_dashboard':
+        
+        $patientController->ActionDashbaordPatient();
+        break;     
+        
+    }
+}else{
     UserController::loginAction();
 }
