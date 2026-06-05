@@ -39,6 +39,50 @@ class MedecinRepository extends BaseRepository
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public static function getDisponibilites($medecinId)
+{
+    $sql = "
+        SELECT *
+        FROM disponibilites
+        WHERE medecin_id = ?
+        ORDER BY date, heure_debut
+    ";
+
+    $stmt = self::getConnection()->prepare($sql);
+    $stmt->execute([$medecinId]);
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
+
+public static function createDisponibilite(
+    $medecinId,
+    $date,
+    $heureDebut,
+    $heureFin
+) {
+    $sql = "
+        INSERT INTO disponibilites
+        (
+            medecin_id,
+            date,
+            heure_debut,
+            heure_fin,
+            disponible
+        )
+        VALUES (?, ?, ?, ?, 1)
+    ";
+
+    $stmt = self::getConnection()->prepare($sql);
+
+    return $stmt->execute([
+        $medecinId,
+        $date,
+        $heureDebut,
+        $heureFin
+    ]);
+}
+
    
 
 }

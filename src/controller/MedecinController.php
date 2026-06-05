@@ -27,6 +27,7 @@ class MedecinController
         $ANNULE_rdv = RendezVousRepository::countByStatus('ANNULE');
 
         require_once __DIR__ . '/../../views/medecin/dashboard.php';
+         
     }
 
    
@@ -67,8 +68,6 @@ class MedecinController
      public static function listAction()
      {
         Middleware::medecin();
-
-
         $medecin = MedecinRepository::findByUserId(
             $_SESSION['user']['id']
         );
@@ -96,6 +95,42 @@ class MedecinController
 
         require_once __DIR__ . '/../../views/medecin/planning.php';
      }
+
+
+     public static function disponibilitesAction()
+{
+    Middleware::medecin();
+
+    $medecin = MedecinRepository::findByUserId(
+        $_SESSION['user']['id']
+    );
+
+    $disponibilites = MedecinRepository::getDisponibilites(
+        $medecin->id
+    );
+
+    require_once __DIR__ . '/../../views/medecin/disponibilites.php';
+}
+
+
+public static function addDisponibiliteAction()
+{
+    $repository = new MedecinRepository();
+
+    $medecin = $repository->findByUserId(
+        $_SESSION['user']['id']
+    );
+
+    $repository->createDisponibilite(
+        $medecin->id,
+        $_POST['date'],
+        $_POST['heure_debut'],
+        $_POST['heure_fin']
+    );
+
+    header('Location: index.php?action=disponibilites');
+    exit;
+}
  
 
   
