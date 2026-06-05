@@ -28,7 +28,13 @@ $currentAction = $_GET['action'] ?? '';
         Patients & RDV
     </a>
 
-    
+    <a href="index.php?action=disponibilites"
+       class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors <?= ($currentAction === 'disponibilites') ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-[#F4F3EF] hover:text-gray-800' ?>">
+        <i class="ti ti-calendar-plus text-lg"></i>
+        Mes disponibilités
+    </a>
+
+
     <hr class="my-2 border-gray-200">
 
     <a href="index.php?action=logoutAction"
